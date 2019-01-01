@@ -24,7 +24,6 @@ use pocketmine\command\Command;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerChatEvent;
-use pocketmine\level\Level;
 use pocketmine\plugin\PluginBase;
 use vixikhd\onevsone\arena\Arena;
 use vixikhd\onevsone\commands\OneVsOneCommand;
