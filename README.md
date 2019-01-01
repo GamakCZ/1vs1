@@ -1,5 +1,3 @@
-
-<a align="center"><img src="https://github.com/GamakCZ/1vs1/blob/master/icon.png?raw=true" height=20%></img></a>
 <h1 align="center">1vs1</h1>
 
 <div align="center">
