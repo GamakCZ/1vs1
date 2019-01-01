@@ -18,7 +18,7 @@
 
 declare(strict_types=1);
 
-namespace vixikhd\OneVsOne;
+namespace vixikhd\onevsone;
 
 use pocketmine\command\Command;
 use pocketmine\event\block\BlockBreakEvent;
