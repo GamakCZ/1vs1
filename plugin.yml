@@ -1,0 +1,28 @@
+name: 1vs1
+api: 3.0.0
+version: 1.0.0
+main: vixikhd\onevsone\OneVsOne
+author: VixikHD
+description: 1vs1 minigame plugin
+website: https://github.com/GamakCZ/1vs1
+
+permissions:
+  1vs1.cmd:
+    description: Permission to all OneVsOne commands
+    default: op
+    children:
+      1vs1.cmd.help:
+        description: Permission for /1vs1 help
+        default: op
+      1vs1.cmd.create:
+        description: Permission for /1vs1 create
+        default: op
+      1vs1.cmd.remove:
+        description: Permission for /1vs1 remove
+        default: op
+      1vs1.cmd.set:
+        description: Permission for /1vs1 set
+        default: op
+      1vs1.cmd.arenas:
+        description: Permission for /1vs1 arenas
+        default: op
