@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2018 GamakCZ
+ * Copyright 2018-2019 GamakCZ
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -35,6 +35,7 @@ use pocketmine\level\Position;
 use pocketmine\Player;
 use pocketmine\tile\Tile;
 use vixikhd\onevsone\event\PlayerArenaWinEvent;
+use vixikhd\onevsone\event\PlayerEquipEvent;
 use vixikhd\onevsone\math\Vector3;
 use vixikhd\onevsone\OneVsOne;
 
@@ -76,6 +77,9 @@ class Arena implements Listener {
 
     /** @var Level $level */
     public $level = null;
+
+    /** @var string $kit */
+    public $kit;
 
     /**
      * Arena constructor.
@@ -129,6 +133,8 @@ class Arena implements Listener {
             }
         }
 
+        $this->broadcastMessage("§a> Player {$player->getName()} joined the match! §7[".count($this->players)."/{$this->data["slots"]}]");
+
         $player->getInventory()->clearAll();
         $player->getArmorInventory()->clearAll();
         $player->getCursorInventory()->clearAll();
@@ -138,15 +144,35 @@ class Arena implements Listener {
         $player->setFood(20);
 
         $inv = $player->getArmorInventory();
-        $inv->setHelmet(Item::get(Item::DIAMOND_HELMET));
-        $inv->setChestplate(Item::get(Item::DIAMOND_CHESTPLATE));
-        $inv->setLeggings(Item::get(Item::DIAMOND_LEGGINGS));
-        $inv->setBoots(Item::get(Item::DIAMOND_BOOTS));
+        if(empty($this->plugin->dataProvider->config["kits"]) || !is_array($this->plugin->dataProvider->config["kits"]) || $this->kit === null) {
+            $inv->setHelmet(Item::get(Item::DIAMOND_HELMET));
+            $inv->setChestplate(Item::get(Item::DIAMOND_CHESTPLATE));
+            $inv->setLeggings(Item::get(Item::DIAMOND_LEGGINGS));
+            $inv->setBoots(Item::get(Item::DIAMOND_BOOTS));
 
-        $player->getInventory()->addItem(Item::get(Item::IRON_SWORD));
-        $player->getInventory()->addItem(Item::get(Item::GOLDEN_APPLE, 0, 5));
+            $player->getInventory()->addItem(Item::get(Item::IRON_SWORD));
+            $player->getInventory()->addItem(Item::get(Item::GOLDEN_APPLE, 0, 5));
+            $event = new PlayerEquipEvent($this->plugin, $player, $this);
+            $event->call();
+            return;
+        }
 
-        $this->broadcastMessage("§a> Player {$player->getName()} joined the match! §7[".count($this->players)."/{$this->data["slots"]}]");
+
+        $kitData = $this->plugin->dataProvider->config["kits"][$this->kit];
+        if(isset($kitData["helmet"])) $inv->setHelmet(Item::get($kitData["helmet"][0], $kitData["helmet"][1], $kitData["helmet"][2]));
+        if(isset($kitData["chestplate"])) $inv->setChestplate(Item::get($kitData["chestplate"][0], $kitData["chestplate"][1], $kitData["chestplate"][2]));
+        if(isset($kitData["leggings"])) $inv->setLeggings(Item::get($kitData["leggings"][0], $kitData["leggings"][1], $kitData["leggings"][2]));
+        if(isset($kitData["boots"])) $inv->setBoots(Item::get($kitData["boots"][0], $kitData["boots"][1], $kitData["boots"][2]));
+
+        foreach ($kitData as $slot => [$id, $damage, $count]) {
+            if(is_numeric($slot)) {
+                $slot = (int)$slot;
+                $player->getInventory()->setItem($slot, Item::get($id, $damage, $count));
+            }
+        }
+
+        $event = new PlayerEquipEvent($this->plugin, $player, $this);
+        $event->call();
     }
 
     /**
@@ -302,7 +328,7 @@ class Arena implements Listener {
 
         if(!$player instanceof Player) return;
 
-        if($this->inGame($player) && $this->phase == self::PHASE_LOBBY) {
+        if($this->inGame($player) && $this->phase == self::PHASE_LOBBY && !$this->plugin->dataProvider->config["hunger"]) {
             $event->setCancelled(true);
         }
     }
@@ -413,13 +439,14 @@ class Arena implements Listener {
             $this->level = $this->plugin->getServer()->getLevelByName($this->data["level"]);
         }
 
-
-
         else {
             $this->scheduler->reloadTimer();
         }
 
         if(!$this->level instanceof Level) $this->level = $this->plugin->getServer()->getLevelByName($this->data["level"]);
+
+        $keys = array_keys($this->plugin->dataProvider->config["kits"]);
+        $this->kit = $keys[array_rand($keys, 1)];
 
         $this->phase = static::PHASE_LOBBY;
         $this->players = [];

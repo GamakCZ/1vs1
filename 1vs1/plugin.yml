@@ -1,6 +1,6 @@
 name: 1vs1
 api: 3.0.0
-version: 1.0.0
+version: 1.0.1
 main: vixikhd\onevsone\OneVsOne
 author: VixikHD
 description: 1vs1 minigame plugin
@@ -26,3 +26,6 @@ permissions:
       1vs1.cmd.arenas:
         description: Permission for /1vs1 arenas
         default: op
+      1vs1.cmd.join:
+        description: Permission for /1vs1 join
+        default: true

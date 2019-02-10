@@ -26,10 +26,12 @@ use vixikhd\onevsone\arena\Arena;
 use vixikhd\onevsone\OneVsOne;
 
 /**
- * Class PlayerArenaWinEvent
- * @package onevsone\event
+ * Class PlayerEquipEvent
+ * @package vixikhd\onevsone\event
+ *
+ * called after kit is equipped, so you can replace items in inventories
  */
-class PlayerArenaWinEvent extends PluginEvent {
+class PlayerEquipEvent extends PluginEvent {
 
     /** @var null $handlerList */
     public static $handlerList = \null;
@@ -41,7 +43,7 @@ class PlayerArenaWinEvent extends PluginEvent {
     protected $arena;
 
     /**
-     * PlayerArenaWinEvent constructor.
+     * PlayerEquipEvent constructor.
      * @param OneVsOne $plugin
      * @param Player $player
      * @param Arena $arena

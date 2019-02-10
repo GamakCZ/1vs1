@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2018 GamakCZ
+ * Copyright 2018-2019 GamakCZ
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -34,6 +34,9 @@ class YamlDataProvider {
     /** @var OneVsOne $plugin */
     private $plugin;
 
+    /** @var array $config */
+    public $config;
+
     /**
      * YamlDataProvider constructor.
      * @param OneVsOne $plugin
@@ -41,7 +44,6 @@ class YamlDataProvider {
     public function __construct(OneVsOne $plugin) {
         $this->plugin = $plugin;
         $this->init();
-        $this->loadArenas();
     }
 
     public function init() {
@@ -54,6 +56,11 @@ class YamlDataProvider {
         if(!is_dir($this->getDataFolder() . "saves")) {
             @mkdir($this->getDataFolder() . "saves");
         }
+        if(!is_file($this->getDataFolder() . "/config.yml")) {
+            $this->plugin->saveResource("/config.yml");
+        }
+        $this->config = (new Config($this->getDataFolder() . "/config.yml", Config::YAML))->getAll();
+        var_dump($this->config);
     }
 
     public function loadArenas() {

@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2018 GamakCZ
+ * Copyright 2018-2019 GamakCZ
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -54,10 +54,6 @@ class OneVsOneCommand extends Command implements PluginIdentifiableCommand {
      * @return mixed|void
      */
     public function execute(CommandSender $sender, string $commandLabel, array $args) {
-        if(!$sender->hasPermission("1vs1.cmd")) {
-            $sender->sendMessage("§cYou have not permissions to use this command!");
-            return;
-        }
         if(!isset($args[0])) {
             $sender->sendMessage("§cUsage: §7/1vs1 help");
             return;
@@ -74,7 +70,8 @@ class OneVsOneCommand extends Command implements PluginIdentifiableCommand {
                     "§7/1vs1 create : Create OneVsOne arena\n".
                     "§7/1vs1 remove : Remove OneVsOne arena\n".
                     "§7/1vs1 set : Set OneVsOne arena\n".
-                    "§7/1vs1 arenas : Displays list of arenas");
+                    "§7/1vs1 arenas : Displays list of arenas\n" .
+                    "§7/1vs1 join : Connect player to the random arena");
 
                 break;
             case "create":
@@ -164,6 +161,17 @@ class OneVsOneCommand extends Command implements PluginIdentifiableCommand {
                     }
                 }
                 $sender->sendMessage($list);
+                break;
+            case "join":
+                if(!$sender->hasPermission("1vs1.cmd.join")) {
+                    $sender->hasPermission("§cYou have not permissions to use this command!");
+                    break;
+                }
+                if(!$sender instanceof Player) {
+                    $sender->sendMessage("§c> This command can be used only in game!");
+                    break;
+                }
+                $this->plugin->joinToRandomArena($sender);
                 break;
             default:
                 if(!$sender->hasPermission("1vs1.cmd.help")) {

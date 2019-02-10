@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2018 GamakCZ
+ * Copyright 2018-2019 GamakCZ
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,6 +24,7 @@ use pocketmine\command\Command;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerChatEvent;
+use pocketmine\Player;
 use pocketmine\plugin\PluginBase;
 use vixikhd\onevsone\arena\Arena;
 use vixikhd\onevsone\commands\OneVsOneCommand;
@@ -39,6 +40,9 @@ class OneVsOne extends PluginBase implements Listener {
     /** @var YamlDataProvider */
     public $dataProvider;
 
+    /** @var EmptyArenaChooser $emptyArenaChooser */
+    public $emptyArenaChooser;
+
     /** @var Command[] $commands */
     public $commands = [];
 
@@ -51,9 +55,14 @@ class OneVsOne extends PluginBase implements Listener {
     /** @var int[] $setupData */
     public $setupData = [];
 
+    public function onLoad() {
+        $this->dataProvider = new YamlDataProvider($this);
+    }
+
     public function onEnable() {
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
-        $this->dataProvider = new YamlDataProvider($this);
+        $this->dataProvider->loadArenas();
+        $this->emptyArenaChooser = new EmptyArenaChooser($this);
         $this->getServer()->getCommandMap()->register("1vs1", $this->commands[] = new OneVsOneCommand($this));
     }
 
@@ -116,7 +125,7 @@ class OneVsOne extends PluginBase implements Listener {
                 $player->sendMessage("§a> Spawn $args[1] set to X: " . (string)round($player->getX()) . " Y: " . (string)round($player->getY()) . " Z: " . (string)round($player->getZ()));
                 break;
             case "joinsign":
-                $player->sendMessage("§a> Break block to set joinsign!");
+                $player->sendMessage("§a> Break block to set join sign!");
                 $this->setupData[$player->getName()] = 0;
                 break;
             case "enable":
@@ -161,5 +170,17 @@ class OneVsOne extends PluginBase implements Listener {
                     break;
             }
         }
+    }
+
+    /**
+     * @param Player $player
+     */
+    public function joinToRandomArena(Player $player) {
+        $arena = $this->emptyArenaChooser->getRandomArena();
+        if(!is_null($arena)) {
+            $arena->joinToArena($player);
+            return;
+        }
+        $player->sendMessage("§c> All the arenas are full!");
     }
 }
