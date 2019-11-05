@@ -70,6 +70,7 @@ class OneVsOneCommand extends Command implements PluginIdentifiableCommand {
                     "§7/1vs1 create : Create OneVsOne arena\n".
                     "§7/1vs1 remove : Remove OneVsOne arena\n".
                     "§7/1vs1 set : Set OneVsOne arena\n".
+                    "§7/1vs1 leave : Leave a OneVsOne arena\n".
                     "§7/1vs1 arenas : Displays list of arenas\n" .
                     "§7/1vs1 join : Connect player to the random arena");
 
@@ -172,6 +173,17 @@ class OneVsOneCommand extends Command implements PluginIdentifiableCommand {
                     break;
                 }
                 $this->plugin->joinToRandomArena($sender);
+                break;
+            case "leave":
+                if(!$sender->hasPermission("1vs1.cmd.leave")) {
+                    $sender->hasPermission("§cYou have not permissions to use this command!");
+                    break;
+                }
+                if(!$sender instanceof Player) {
+                    $sender->sendMessage("§c> This command can be used only in game!");
+                    break;
+                }
+                $this->plugin->leaveArena($sender);
                 break;
             default:
                 if(!$sender->hasPermission("1vs1.cmd.help")) {
