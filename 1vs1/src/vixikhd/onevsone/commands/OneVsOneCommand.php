@@ -183,7 +183,7 @@ class OneVsOneCommand extends Command implements PluginIdentifiableCommand {
                     $sender->sendMessage("§c> This command can be used only in game!");
                     break;
                 }
-                $this->plugin->leaveArena($sender);
+                $this->plugin->disconnectplayer($sender);
                 break;
             default:
                 if(!$sender->hasPermission("1vs1.cmd.help")) {
