@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2018-2019 GamakCZ
+ * Copyright 2018-2022 GamakCZ
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ class Vector3 extends \pocketmine\math\Vector3 {
     /**
      * @return string
      */
-    public function __toString() {
+    public function __toString(): string {
         return "$this->x,$this->y,$this->z";
     }
 
@@ -37,7 +37,7 @@ class Vector3 extends \pocketmine\math\Vector3 {
      * @param string $string
      * @return Vector3
      */
-    public static function fromString(string $string) {
+    public static function fromString(string $string): Vector3 {
         return new Vector3((int)explode(",", $string)[0], (int)explode(",", $string)[1], (int)explode(",", $string)[2]);
     }
 }

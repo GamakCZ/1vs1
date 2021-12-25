@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2018-2019 GamakCZ
+ * Copyright 2018-2022 GamakCZ
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -29,7 +29,7 @@ use vixikhd\onevsone\arena\Arena;
 class EmptyArenaChooser {
 
     /** @var OneVsOne $plugin */
-    public $plugin;
+    public OneVsOne $plugin;
 
     /**
      * EmptyArenaQueue constructor.
@@ -91,6 +91,6 @@ class EmptyArenaChooser {
             return null;
         }
 
-        return $this->plugin->arenas[$availableArenas[array_rand($availableArenas, 1)]];
+        return $this->plugin->arenas[$availableArenas[array_rand($availableArenas)]];
     }
 }

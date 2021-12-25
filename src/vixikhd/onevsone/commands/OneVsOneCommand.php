@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2018-2019 GamakCZ
+ * Copyright 2018-2022 GamakCZ
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -22,10 +22,9 @@ namespace vixikhd\onevsone\commands;
 
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
-use pocketmine\command\PluginIdentifiableCommand;
-use pocketmine\Player;
+use pocketmine\player\Player;
 use pocketmine\plugin\Plugin;
-use pocketmine\plugin\PluginBase;
+use pocketmine\plugin\PluginOwned;
 use vixikhd\onevsone\arena\Arena;
 use vixikhd\onevsone\OneVsOne;
 
@@ -33,10 +32,10 @@ use vixikhd\onevsone\OneVsOne;
  * Class OneVsOneCommand
  * @package onevsone\commands
  */
-class OneVsOneCommand extends Command implements PluginIdentifiableCommand {
+class OneVsOneCommand extends Command implements PluginOwned {
 
     /** @var OneVsOne $plugin */
-    protected $plugin;
+    protected OneVsOne $plugin;
 
     /**
      * OneVsOneCommand constructor.
@@ -44,16 +43,16 @@ class OneVsOneCommand extends Command implements PluginIdentifiableCommand {
      */
     public function __construct(OneVsOne $plugin) {
         $this->plugin = $plugin;
-        parent::__construct("onevsone", "OneVsOne commands", \null, ["1vs1"]);
+        parent::__construct("onevsone", "OneVsOne commands", null, ["1vs1"]);
     }
 
     /**
      * @param CommandSender $sender
      * @param string $commandLabel
      * @param array $args
-     * @return mixed|void
+     * @return void
      */
-    public function execute(CommandSender $sender, string $commandLabel, array $args) {
+    public function execute(CommandSender $sender, string $commandLabel, array $args): void {
         if(!isset($args[0])) {
             $sender->sendMessage("§cUsage: §7/1vs1 help");
             return;
@@ -104,11 +103,10 @@ class OneVsOneCommand extends Command implements PluginIdentifiableCommand {
                     break;
                 }
 
-                /** @var Arena $arena */
-                $arena = $this->plugin->arenas[$args[1]];
+				$arena = $this->plugin->arenas[$args[1]];
 
                 foreach ($arena->players as $player) {
-                    $player->teleport($this->plugin->getServer()->getDefaultLevel()->getSpawnLocation());
+                    $player->teleport($this->plugin->getServer()->getWorldManager()->getDefaultWorld()->getSpawnLocation());
                 }
 
                 if(is_file($file = $this->plugin->getDataFolder() . "arenas" . DIRECTORY_SEPARATOR . $args[1] . ".yml")) unlink($file);
@@ -184,11 +182,7 @@ class OneVsOneCommand extends Command implements PluginIdentifiableCommand {
 
     }
 
-    /**
-     * @return OneVsOne|Plugin $plugin
-     */
-    public function getPlugin(): Plugin {
-        return $this->plugin;
-    }
-
+	public function getOwningPlugin(): Plugin {
+		return $this->plugin;
+	}
 }

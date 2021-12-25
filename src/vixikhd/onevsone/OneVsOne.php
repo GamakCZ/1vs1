@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2018-2019 GamakCZ
+ * Copyright 2018-2022 GamakCZ
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -24,7 +24,7 @@ use pocketmine\command\Command;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerChatEvent;
-use pocketmine\Player;
+use pocketmine\player\Player;
 use pocketmine\plugin\PluginBase;
 use vixikhd\onevsone\arena\Arena;
 use vixikhd\onevsone\commands\OneVsOneCommand;
@@ -38,53 +38,52 @@ use vixikhd\onevsone\provider\YamlDataProvider;
 class OneVsOne extends PluginBase implements Listener {
 
     /** @var YamlDataProvider */
-    public $dataProvider;
+    public YamlDataProvider $dataProvider;
 
     /** @var EmptyArenaChooser $emptyArenaChooser */
-    public $emptyArenaChooser;
+    public EmptyArenaChooser $emptyArenaChooser;
 
     /** @var Command[] $commands */
-    public $commands = [];
+    public array $commands = [];
 
     /** @var Arena[] $arenas */
-    public $arenas = [];
+    public array $arenas = [];
 
     /** @var Arena[] $setters */
-    public $setters = [];
+    public array $setters = [];
 
     /** @var int[] $setupData */
-    public $setupData = [];
+    public array $setupData = [];
 
-    public function onLoad() {
+    final public function onLoad(): void {
         $this->dataProvider = new YamlDataProvider($this);
     }
 
-    public function onEnable() {
+    public function onEnable(): void {
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
         $this->dataProvider->loadArenas();
         $this->emptyArenaChooser = new EmptyArenaChooser($this);
         $this->getServer()->getCommandMap()->register("1vs1", $this->commands[] = new OneVsOneCommand($this));
     }
 
-    public function onDisable() {
+    final public function onDisable(): void {
         $this->dataProvider->saveArenas();
     }
 
     /**
      * @param PlayerChatEvent $event
      */
-    public function onChat(PlayerChatEvent $event) {
+    public function onChat(PlayerChatEvent $event): void {
         $player = $event->getPlayer();
 
         if(!isset($this->setters[$player->getName()])) {
             return;
         }
 
-        $event->setCancelled(\true);
+        $event->cancel();
         $args = explode(" ", $event->getMessage());
 
-        /** @var Arena $arena */
-        $arena = $this->setters[$player->getName()];
+		$arena = $this->setters[$player->getName()];
 
         switch ($args[0]) {
             case "help":
@@ -100,7 +99,7 @@ class OneVsOne extends PluginBase implements Listener {
                     $player->sendMessage("§cUsage: §7level <levelName>");
                     break;
                 }
-                if(!$this->getServer()->isLevelGenerated($args[1])) {
+                if(!$this->getServer()->getWorldManager()->isWorldGenerated($args[1])) {
                     $player->sendMessage("§c> Level $args[1] does not found!");
                     break;
                 }
@@ -121,8 +120,8 @@ class OneVsOne extends PluginBase implements Listener {
                     break;
                 }
 
-                $arena->data["spawns"]["spawn-{$args[1]}"] = (new Vector3($player->getX(), $player->getY(), $player->getZ()))->__toString();
-                $player->sendMessage("§a> Spawn $args[1] set to X: " . (string)round($player->getX()) . " Y: " . (string)round($player->getY()) . " Z: " . (string)round($player->getZ()));
+                $arena->data["spawns"]["spawn-$args[1]"] = (new Vector3($player->getLocation()->getX(), $player->getLocation()->getY(), $player->getLocation()->getZ()))->__toString();
+                $player->sendMessage("§a> Spawn $args[1] set to X: " . round($player->getLocation()->getX()) . " Y: " . round($player->getLocation()->getY()) . " Z: " . round($player->getLocation()->getZ()));
                 break;
             case "joinsign":
                 $player->sendMessage("§a> Break block to set join sign!");
@@ -157,25 +156,23 @@ class OneVsOne extends PluginBase implements Listener {
     /**
      * @param BlockBreakEvent $event
      */
-    public function onBreak(BlockBreakEvent $event) {
+    public function onBreak(BlockBreakEvent $event): void {
         $player = $event->getPlayer();
         $block = $event->getBlock();
         if(isset($this->setupData[$player->getName()])) {
-            switch ($this->setupData[$player->getName()]) {
-                case 0:
-                    $this->setters[$player->getName()]->data["joinsign"] = [(new Vector3($block->getX(), $block->getY(), $block->getZ()))->__toString(), $block->getLevel()->getFolderName()];
-                    $player->sendMessage("§a> Join sign updated!");
-                    unset($this->setupData[$player->getName()]);
-                    $event->setCancelled(\true);
-                    break;
-            }
+			if ($this->setupData[$player->getName()] == 0) {
+				$this->setters[$player->getName()]->data["joinsign"] = [(new Vector3($block->getPosition()->getX(), $block->getPosition()->getY(), $block->getPosition()->getZ()))->__toString(), $block->getPosition()->getWorld()->getFolderName()];
+				$player->sendMessage("§a> Join sign updated!");
+				unset($this->setupData[$player->getName()]);
+				$event->cancel();
+			}
         }
     }
 
     /**
      * @param Player $player
      */
-    public function joinToRandomArena(Player $player) {
+    public function joinToRandomArena(Player $player): void  {
         $arena = $this->emptyArenaChooser->getRandomArena();
         if(!is_null($arena)) {
             $arena->joinToArena($player);

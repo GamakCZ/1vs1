@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2018-2019 GamakCZ
+ * Copyright 2018-2022 GamakCZ
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -20,7 +20,7 @@ declare(strict_types=1);
 
 namespace vixikhd\onevsone\provider;
 
-use pocketmine\level\Level;
+use JsonException;
 use pocketmine\utils\Config;
 use vixikhd\onevsone\arena\Arena;
 use vixikhd\onevsone\OneVsOne;
@@ -32,10 +32,10 @@ use vixikhd\onevsone\OneVsOne;
 class YamlDataProvider {
 
     /** @var OneVsOne $plugin */
-    private $plugin;
+    private OneVsOne $plugin;
 
     /** @var array $config */
-    public $config;
+    public array $config;
 
     /**
      * YamlDataProvider constructor.
@@ -46,7 +46,7 @@ class YamlDataProvider {
         $this->init();
     }
 
-    public function init() {
+    public function init(): void {
         if(!is_dir($this->getDataFolder())) {
             @mkdir($this->getDataFolder());
         }
@@ -63,14 +63,18 @@ class YamlDataProvider {
         var_dump($this->config);
     }
 
-    public function loadArenas() {
+    public function loadArenas(): void  {
         foreach (glob($this->getDataFolder() . "arenas" . DIRECTORY_SEPARATOR . "*.yml") as $arenaFile) {
             $config = new Config($arenaFile, Config::YAML);
-            $this->plugin->arenas[basename($arenaFile, ".yml")] = new Arena($this->plugin, $config->getAll(\false));
+            $this->plugin->arenas[basename($arenaFile, ".yml")] = new Arena($this->plugin, $config->getAll(false));
         }
     }
 
-    public function saveArenas() {
+	/**
+	 * @return void
+	 * @throws JsonException
+	 */
+	public function saveArenas(): void  {
         foreach ($this->plugin->arenas as $fileName => $arena) {
             $config = new Config($this->getDataFolder() . "arenas" . DIRECTORY_SEPARATOR . $fileName . ".yml", Config::YAML);
             $config->setAll($arena->data);

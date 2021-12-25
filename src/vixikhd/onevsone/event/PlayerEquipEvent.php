@@ -1,7 +1,7 @@
 <?php
 
 /**
- * Copyright 2018-2019 GamakCZ
+ * Copyright 2018-2022 GamakCZ
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -21,7 +21,7 @@ declare(strict_types=1);
 namespace vixikhd\onevsone\event;
 
 use pocketmine\event\plugin\PluginEvent;
-use pocketmine\Player;
+use pocketmine\player\Player;
 use vixikhd\onevsone\arena\Arena;
 use vixikhd\onevsone\OneVsOne;
 
@@ -33,14 +33,11 @@ use vixikhd\onevsone\OneVsOne;
  */
 class PlayerEquipEvent extends PluginEvent {
 
-    /** @var null $handlerList */
-    public static $handlerList = \null;
-
     /** @var Player $player */
-    protected $player;
+    protected Player $player;
 
     /** @var Arena $arena */
-    protected $arena;
+    protected Arena $arena;
 
     /**
      * PlayerEquipEvent constructor.
