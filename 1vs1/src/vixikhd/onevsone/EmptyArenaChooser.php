@@ -24,21 +24,24 @@ use vixikhd\onevsone\arena\Arena;
 
 /**
  * Class EmptyArenaChooser
+ *
  * @package vixikhd\onevsone
  */
-class EmptyArenaChooser {
+class EmptyArenaChooser
+{
 
     /** @var OneVsOne $plugin */
     public $plugin;
 
     /**
      * EmptyArenaQueue constructor.
+     *
      * @param OneVsOne $plugin
      */
-    public function __construct(OneVsOne $plugin) {
+    public function __construct(OneVsOne $plugin)
+    {
         $this->plugin = $plugin;
     }
-
 
 
     /**
@@ -49,7 +52,8 @@ class EmptyArenaChooser {
      * 3. Sort arenas by players
      * 4. Sort arenas by rand()
      */
-    public function getRandomArena(): ?Arena {
+    public function getRandomArena(): ?Arena
+    {
         //1.
 
         /** @var Arena[] $availableArenas */
@@ -60,7 +64,7 @@ class EmptyArenaChooser {
 
         //2.
         foreach ($availableArenas as $index => $arena) {
-            if($arena->phase !== 0 || $arena->setup) {
+            if ($arena->phase !== 0 || $arena->setup) {
                 unset($availableArenas[$index]);
             }
         }
@@ -76,18 +80,15 @@ class EmptyArenaChooser {
         $availableArenas = [];
 
         foreach ($arenasByPlayers as $index => $players) {
-            if($top == -1) {
+            if ($top === -1) {
                 $top = $players;
                 $availableArenas[] = $index;
-            }
-            else {
-                if($top == $players) {
-                    $availableArenas[] = $index;
-                }
+            } else if ($top === $players) {
+                $availableArenas[] = $index;
             }
         }
 
-        if(empty($availableArenas)) {
+        if (empty($availableArenas)) {
             return null;
         }
 

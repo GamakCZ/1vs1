@@ -20,68 +20,78 @@ declare(strict_types=1);
 
 namespace vixikhd\onevsone\provider;
 
-use pocketmine\level\Level;
 use pocketmine\utils\Config;
 use vixikhd\onevsone\arena\Arena;
 use vixikhd\onevsone\OneVsOne;
 
 /**
  * Class YamlDataProvider
+ *
  * @package onevsone\provider
  */
-class YamlDataProvider {
-
-    /** @var OneVsOne $plugin */
-    private $plugin;
+class YamlDataProvider
+{
 
     /** @var array $config */
-    public $config;
+    public array $config;
+
+    /** @var OneVsOne $plugin */
+    private OneVsOne $plugin;
 
     /**
      * YamlDataProvider constructor.
+     *
      * @param OneVsOne $plugin
      */
-    public function __construct(OneVsOne $plugin) {
+    public function __construct(OneVsOne $plugin)
+    {
         $this->plugin = $plugin;
         $this->init();
     }
 
-    public function init() {
-        if(!is_dir($this->getDataFolder())) {
-            @mkdir($this->getDataFolder());
+    public function init(): void
+    {
+        if (!is_dir($this->getDataFolder()) && !@mkdir($concurrentDirectory = $this->getDataFolder()) && !is_dir($concurrentDirectory)) {
+            throw new \RuntimeException(sprintf('Directory "%s" was not created', $concurrentDirectory));
         }
-        if(!is_dir($this->getDataFolder() . "arenas")) {
-            @mkdir($this->getDataFolder() . "arenas");
+
+        if (!is_dir($this->getDataFolder() . "arenas") && !@mkdir($concurrentDirectory = $this->getDataFolder() . "arenas") && !is_dir($concurrentDirectory)) {
+            throw new \RuntimeException(sprintf('Directory "%s" was not created', $concurrentDirectory));
         }
-        if(!is_dir($this->getDataFolder() . "saves")) {
-            @mkdir($this->getDataFolder() . "saves");
+
+        if (!is_dir($this->getDataFolder() . "saves") && @mkdir($concurrentDirectory = $this->getDataFolder() . "saves") && !is_dir($concurrentDirectory)) {
+            throw new \RuntimeException(sprintf('Directory "%s" was not created', $concurrentDirectory));
         }
-        if(!is_file($this->getDataFolder() . "/config.yml")) {
+        if (!is_file($this->getDataFolder() . "/config.yml")) {
             $this->plugin->saveResource("/config.yml");
         }
+
         $this->config = (new Config($this->getDataFolder() . "/config.yml", Config::YAML))->getAll();
-        var_dump($this->config);
+        //var_dump($this->config);
     }
 
-    public function loadArenas() {
+    private function getDataFolder(): string
+    {
+        return $this->plugin->getDataFolder();
+    }
+
+    public function loadArenas(): void
+    {
         foreach (glob($this->getDataFolder() . "arenas" . DIRECTORY_SEPARATOR . "*.yml") as $arenaFile) {
             $config = new Config($arenaFile, Config::YAML);
-            $this->plugin->arenas[basename($arenaFile, ".yml")] = new Arena($this->plugin, $config->getAll(\false));
+            $this->plugin->arenas[basename($arenaFile, ".yml")] = new Arena($this->plugin, $config->getAll(false));
         }
     }
 
-    public function saveArenas() {
+    /**
+     * @throws \JsonException
+     */
+    public function saveArenas(): void
+    {
         foreach ($this->plugin->arenas as $fileName => $arena) {
             $config = new Config($this->getDataFolder() . "arenas" . DIRECTORY_SEPARATOR . $fileName . ".yml", Config::YAML);
             $config->setAll($arena->data);
             $config->save();
         }
-    }
-
-    /**
-     * @return string $dataFolder
-     */
-    private function getDataFolder(): string {
-        return $this->plugin->getDataFolder();
     }
 }

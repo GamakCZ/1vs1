@@ -1,8 +1,8 @@
 name: 1vs1
-api: 3.0.0
-version: 1.0.1
+api: 4.2.0
+version: 2.0.0
 main: vixikhd\onevsone\OneVsOne
-author: VixikHD
+authors: ["VixikHD", "zOmArRD"]
 description: 1vs1 minigame plugin
 website: https://github.com/GamakCZ/1vs1
 
