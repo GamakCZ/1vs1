@@ -118,14 +118,16 @@ class Arena implements Listener
         if (empty($this->data)) {
             return false;
         }
+
         if ($this->data["level"] === null) {
-            return false;
-        }
-        if (!$this->plugin->getServer()->getWorldManager()->isWorldGenerated($this->data["level"])) {
             return false;
         }
 
         if (!$this->plugin->getServer()->getWorldManager()->isWorldGenerated($this->data["level"])) {
+            return false;
+        }
+
+        if (!$this->plugin->getServer()->getWorldManager()->isWorldLoaded($this->data["level"])) {
             $this->plugin->getServer()->getWorldManager()->loadWorld($this->data["level"]);
         }
 
@@ -319,7 +321,7 @@ class Arena implements Listener
         $block = $event->getBlock();
 
         if ($this->inGame($player) && $event->getBlock()->getId() === BlockLegacyIds::CHEST && $this->phase === self::PHASE_LOBBY) {
-            $event->cancel(true);
+            $event->cancel();
             return;
         }
 
@@ -389,7 +391,7 @@ class Arena implements Listener
         $player->getHungerManager()->setFood(20);
 
         $inv = $player->getArmorInventory();
-        if (empty($this->plugin->dataProvider->config["kits"]) || !is_array($this->plugin->dataProvider->config["kits"]) || $this->kit === null) {
+        if (empty($this->plugin->dataProvider->config["kits"]) || !is_array($this->plugin->dataProvider->config["kits"])) {
             $inv->setHelmet(VanillaItems::DIAMOND_HELMET());
             $inv->setChestplate(VanillaItems::DIAMOND_CHESTPLATE());
             $inv->setLeggings(VanillaItems::DIAMOND_LEGGINGS());
