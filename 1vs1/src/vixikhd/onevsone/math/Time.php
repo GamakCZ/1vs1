@@ -27,8 +27,8 @@ namespace vixikhd\onevsone\math;
  */
 class Time
 {
-    public static function calculateTime(int $time): string
-    {
-        return gmdate("i:s", $time);
-    }
+	public static function calculateTime(int $time): string
+	{
+		return gmdate("i:s", $time);
+	}
 }

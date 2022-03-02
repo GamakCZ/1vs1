@@ -38,145 +38,140 @@ use vixikhd\onevsone\math\Vector3;
 class ArenaScheduler extends Task
 {
 
-    /** @var int $startTime */
-    public int $startTime = 10;
-    /** @var float|int $gameTime */
-    public int|float $gameTime = 20 * 60;
-    /** @var int $restartTime */
-    public int $restartTime = 10;
-    /** @var array $restartData */
-    public array $restartData = [];
-    /** @var Arena $plugin */
-    protected Arena $plugin;
+	/** @var int $startTime */
+	public int $startTime = 10;
+	/** @var float|int $gameTime */
+	public int|float $gameTime = 20 * 60;
+	/** @var int $restartTime */
+	public int $restartTime = 10;
+	/** @var array $restartData */
+	public array $restartData = [];
+	/** @var Arena $plugin */
+	protected Arena $plugin;
 
-    /**
-     * ArenaScheduler constructor.
-     *
-     * @param Arena $plugin
-     */
-    public function __construct(Arena $plugin)
-    {
-        $this->plugin = $plugin;
-    }
+	/**
+	 * ArenaScheduler constructor.
+	 *
+	 * @param Arena $plugin
+	 */
+	public function __construct(Arena $plugin)
+	{
+		$this->plugin = $plugin;
+	}
 
-    public function onRun(): void
-    {
-        $this->reloadSign();
+	public function onRun(): void
+	{
+		$this->reloadSign();
 
-        if ($this->plugin->setup) {
-            return;
-        }
+		if ($this->plugin->setup) {
+			return;
+		}
 
-        switch ($this->plugin->phase) {
-            case Arena::PHASE_LOBBY:
-                if (count($this->plugin->players) >= 2) {
-                    $this->plugin->broadcastMessage("§a> Starting in " . Time::calculateTime($this->startTime) . " sec.", Arena::MSG_TIP);
-                    $this->startTime--;
-                    if ($this->startTime === 0) {
-                        $this->plugin->startGame();
-                        foreach ($this->plugin->players as $player) {
-                            $this->plugin->level->addSound($player->getLocation(), new AnvilUseSound());
-                        }
-                    } else {
-                        foreach ($this->plugin->players as $player) {
-                            $this->plugin->level->addSound($player->getLocation(), new ClickSound());
-                        }
-                    }
-                } else {
-                    $this->plugin->broadcastMessage("§c> You need more players to start a game!", Arena::MSG_TIP);
-                    $this->startTime = 10;
-                }
-                break;
-            case Arena::PHASE_GAME:
-                $this->plugin->broadcastMessage("§a> There are " . count($this->plugin->players) . " players, time to end: " . Time::calculateTime($this->gameTime), Arena::MSG_TIP);
-                if ($this->plugin->checkEnd()) $this->plugin->startRestart();
-                $this->gameTime--;
-                break;
-            case Arena::PHASE_RESTART:
-                $this->plugin->broadcastMessage("§a> Restarting in {$this->restartTime} sec.", Arena::MSG_TIP);
-                $this->restartTime--;
+		switch ($this->plugin->phase) {
+			case Arena::PHASE_LOBBY:
+				if (count($this->plugin->players) >= 2) {
+					$this->plugin->broadcastMessage("§a> Starting in " . Time::calculateTime($this->startTime) . " sec.", Arena::MSG_TIP);
+					$this->startTime--;
+					if ($this->startTime === 0) {
+						$this->plugin->startGame();
+						foreach ($this->plugin->players as $player) {
+							$this->plugin->level->addSound($player->getLocation(), new AnvilUseSound());
+						}
+					} else {
+						foreach ($this->plugin->players as $player) {
+							$this->plugin->level->addSound($player->getLocation(), new ClickSound());
+						}
+					}
+				} else {
+					$this->plugin->broadcastMessage("§c> You need more players to start a game!", Arena::MSG_TIP);
+					$this->startTime = 10;
+				}
+				break;
+			case Arena::PHASE_GAME:
+				$this->plugin->broadcastMessage("§a> There are " . count($this->plugin->players) . " players, time to end: " . Time::calculateTime($this->gameTime), Arena::MSG_TIP);
+				if ($this->plugin->checkEnd()) $this->plugin->startRestart();
+				$this->gameTime--;
+				break;
+			case Arena::PHASE_RESTART:
+				$this->plugin->broadcastMessage("§a> Restarting in {$this->restartTime} sec.", Arena::MSG_TIP);
+				$this->restartTime--;
 
-                if ($this->restartTime === 0) {
-                    foreach ($this->plugin->players as $player) {
-                        $player->teleport($this->plugin->plugin->getServer()->getWorldManager()->getDefaultWorld()?->getSpawnLocation());
+				if ($this->restartTime === 0) {
+					foreach ($this->plugin->players as $player) {
+						$player->teleport($this->plugin->plugin->getServer()->getWorldManager()->getDefaultWorld()?->getSpawnLocation());
 
-                        $player->getInventory()->clearAll();
-                        $player->getArmorInventory()->clearAll();
-                        $player->getCursorInventory()->clearAll();
+						$player->getInventory()->clearAll();
+						$player->getArmorInventory()->clearAll();
+						$player->getCursorInventory()->clearAll();
 
-                        $player->getHungerManager()->setFood(20);
-                        $player->setHealth(20);
+						$player->getHungerManager()->setFood(20);
+						$player->setHealth(20);
 
-                        $player->setGamemode($this->plugin->plugin->getServer()->getGamemode());
-                    }
-                    $this->plugin->loadArena(true);
-                    $this->reloadTimer();
-                }
-                break;
-        }
-    }
+						$player->setGamemode($this->plugin->plugin->getServer()->getGamemode());
+					}
+					$this->plugin->loadArena(true);
+					$this->reloadTimer();
+				}
+				break;
+		}
+	}
 
-    public function reloadSign(): void
-    {
-        if (!is_array($this->plugin->data["joinsign"]) || empty($this->plugin->data["joinsign"])) {
-            return;
-        }
+	public function reloadSign(): void
+	{
+		if (!is_array($this->plugin->data["joinsign"]) || empty($this->plugin->data["joinsign"])) {
+			return;
+		}
 
-        $signPos = Position::fromObject(Vector3::fromString($this->plugin->data["joinsign"][0]), $this->plugin->plugin->getServer()->getWorldManager()->getWorldByName($this->plugin->data["joinsign"][1]));
+		$signPos = Position::fromObject(Vector3::fromString($this->plugin->data["joinsign"][0]), $this->plugin->plugin->getServer()->getWorldManager()->getWorldByName($this->plugin->data["joinsign"][1]));
 
-        if (!$signPos->getWorld() instanceof World) {
-            return;
-        }
+		if (!$signPos->getWorld() instanceof World) {
+			return;
+		}
 
-        $signText = [
-            "§2§l1vs1",
-            "§9[ §b? / ? §9]",
-            "§6Setup",
-            "§6Wait few sec..."
-        ];
+		$signText = ["§2§l1vs1", "§9[ §b? / ? §9]", "§6Setup", "§6Wait few sec..."];
 
-        if ($signPos->getWorld()->getTile($signPos) === null) {
-            return;
-        }
+		if ($signPos->getWorld()->getTile($signPos) === null) {
+			return;
+		}
 
-        if ($this->plugin->setup) {
-            /** @var Sign $sign */
-            $sign = $signPos->getWorld()->getTile($signPos);
-            $sign->setText(new SignText([$signText[0], $signText[1], $signText[2], $signText[3]]));
-            return;
-        }
+		if ($this->plugin->setup) {
+			/** @var Sign $sign */
+			$sign = $signPos->getWorld()->getTile($signPos);
+			$sign->setText(new SignText([$signText[0], $signText[1], $signText[2], $signText[3]]));
+			return;
+		}
 
-        $signText[1] = "§9[ §b" . count($this->plugin->players) . " / " . $this->plugin->data["slots"] . " §9]";
+		$signText[1] = "§9[ §b" . count($this->plugin->players) . " / " . $this->plugin->data["slots"] . " §9]";
 
-        switch ($this->plugin->phase) {
-            case Arena::PHASE_LOBBY:
-                if (count($this->plugin->players) >= $this->plugin->data["slots"]) {
-                    $signText[2] = "§6Full";
-                } else {
-                    $signText[2] = "§aJoin";
-                }
+		switch ($this->plugin->phase) {
+			case Arena::PHASE_LOBBY:
+				if (count($this->plugin->players) >= $this->plugin->data["slots"]) {
+					$signText[2] = "§6Full";
+				} else {
+					$signText[2] = "§aJoin";
+				}
 
-                $signText[3] = "§8Map: §7{$this->plugin->level->getFolderName()}";
-                break;
-            case Arena::PHASE_GAME:
-                $signText[2] = "§5InGame";
-                $signText[3] = "§8Map: §7{$this->plugin->level->getFolderName()}";
-                break;
-            case Arena::PHASE_RESTART:
-                $signText[2] = "§cRestarting...";
-                $signText[3] = "§8Map: §7{$this->plugin->level->getFolderName()}";
-                break;
-        }
+				$signText[3] = "§8Map: §7{$this->plugin->level->getFolderName()}";
+				break;
+			case Arena::PHASE_GAME:
+				$signText[2] = "§5InGame";
+				$signText[3] = "§8Map: §7{$this->plugin->level->getFolderName()}";
+				break;
+			case Arena::PHASE_RESTART:
+				$signText[2] = "§cRestarting...";
+				$signText[3] = "§8Map: §7{$this->plugin->level->getFolderName()}";
+				break;
+		}
 
-        /** @var Sign $sign */
-        $sign = $signPos->getWorld()->getTile($signPos);
-        $sign->setText(new SignText([$signText[0], $signText[1], $signText[2], $signText[3]]));
-    }
+		/** @var Sign $sign */
+		$sign = $signPos->getWorld()->getTile($signPos);
+		$sign->setText(new SignText([$signText[0], $signText[1], $signText[2], $signText[3]]));
+	}
 
-    public function reloadTimer(): void
-    {
-        $this->startTime = 10;
-        $this->gameTime = 20 * 60;
-        $this->restartTime = 10;
-    }
+	public function reloadTimer(): void
+	{
+		$this->startTime = 10;
+		$this->gameTime = 20 * 60;
+		$this->restartTime = 10;
+	}
 }

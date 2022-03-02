@@ -35,29 +35,29 @@ use vixikhd\onevsone\OneVsOne;
 class PlayerEquipEvent extends PluginEvent
 {
 
-    /** @var null $handlerList */
-    public static $handlerList = null;
+	/** @var null $handlerList */
+	public static $handlerList = null;
 
-    /** @var Player $player */
-    protected Player $player;
+	/** @var Player $player */
+	protected Player $player;
 
-    /** @var Arena $arena */
-    protected Arena $arena;
+	/** @var Arena $arena */
+	protected Arena $arena;
 
-    public function __construct(OneVsOne $plugin, Player $player, Arena $arena)
-    {
-        $this->player = $player;
-        $this->arena = $arena;
-        parent::__construct($plugin);
-    }
+	public function __construct(OneVsOne $plugin, Player $player, Arena $arena)
+	{
+		$this->player = $player;
+		$this->arena = $arena;
+		parent::__construct($plugin);
+	}
 
-    public function getPlayer(): Player
-    {
-        return $this->player;
-    }
+	public function getPlayer(): Player
+	{
+		return $this->player;
+	}
 
-    public function getArena(): Arena
-    {
-        return $this->arena;
-    }
+	public function getArena(): Arena
+	{
+		return $this->arena;
+	}
 }
