@@ -201,9 +201,9 @@ class Arena implements Listener {
                 break;
         }
 
-        $player->removeAllEffects();
+        $player->getEffects()->removeAllEffects();
 
-        $player->setGamemode($this->plugin->getServer()->getDefaultGamemode());
+        $player->setGamemode($this->plugin->getServer()->getGameMode()->getDefaultGamemode());
 
         $player->setHealth(20);
         $player->getHungerManager()->setFood(20);
