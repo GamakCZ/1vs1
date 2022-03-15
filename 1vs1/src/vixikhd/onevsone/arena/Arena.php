@@ -346,7 +346,7 @@ class Arena implements Listener {
         $player = $event->getPlayer();
         $block = $event->getBlock();
 
-        if($this->inGame($player) && $event->getBlock()->getId() == Block::CHEST && $this->phase == self::PHASE_LOBBY) {
+        if($this->inGame($player) && $event->getBlock()->getId() == VanillaBlocks::CHEST() && $this->phase == self::PHASE_LOBBY) {
             $event->cancel();
             return;
         }
@@ -386,7 +386,7 @@ class Arena implements Listener {
         if(!$this->inGame($player)) return;
 
         foreach ($event->getDrops() as $item) {
-            $player->getLevel()->dropItem($player, $item);
+            $player->getWorld()->dropItem($player, $item);
         }
         $this->toRespawn[$player->getName()] = $player;
         $this->disconnectPlayer($player, "", true);
@@ -416,7 +416,7 @@ class Arena implements Listener {
     }
 
     /**
-     * @param EntityLevelChangeEvent $event
+     * @param EntityTeleportEvent $event
      */
     public function onLevelChange(EntityTeleportEvent $event) {
         $player = $event->getEntity();
