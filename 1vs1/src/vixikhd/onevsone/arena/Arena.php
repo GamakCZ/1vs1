@@ -423,6 +423,7 @@ class Arena implements Listener {
     public function onTeleport(EntityTeleportEvent $event) {
         $player = $event->getEntity();
         if(!$player instanceof Player) return;
+        if($player->getWorld()->getFolderName() === ($this->data["level"])) return;
         if($this->inGame($player)) {
             $this->disconnectPlayer($player, "You are successfully leaved arena!");
         }
