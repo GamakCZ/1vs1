@@ -215,10 +215,10 @@ class Arena implements Listener {
         $player->getArmorInventory()->clearAll();
         $player->getCursorInventory()->clearAll();
 
-        $player->teleport($this->plugin->getServer()->getWorldManager()->getDefaultWorld()->getSpawnLocation());
+        $player->teleport($this->plugin->getServer()->getWorldManager()->getDefaultWorld()->getSafeSpawn());
 
         if(!$death) {
-            $this->broadcastMessage("§a> Player {$player->getName()} left the match. §7[".count($this->players)."/{$this->data["slots"]}]");
+            $this->broadcastMessage("§a> Player {$player->getName()} left the match. §7[".count($this->players)."/{$this->data["slots"]}]",self::MSG_MESSAGE);
         }
 
         if($quitMsg != "") {
@@ -402,7 +402,7 @@ class Arena implements Listener {
     public function onRespawn(PlayerRespawnEvent $event) {
         $player = $event->getPlayer();
         if(isset($this->toRespawn[$player->getName()])) {
-            $event->setRespawnPosition($this->plugin->getServer()->getWorldManager()->getDefaultWorld()->getSpawnLocation());
+            $event->setRespawnPosition($this->plugin->getServer()->getWorldManager()->getDefaultWorld()->getSafeSpawn());
             unset($this->toRespawn[$player->getName()]);
         }
     }
