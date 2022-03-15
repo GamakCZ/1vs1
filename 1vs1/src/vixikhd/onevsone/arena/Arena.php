@@ -37,6 +37,7 @@ use pocketmine\player\Player;
 use pocketmine\item\ItemFactory;
 use pocketmine\item\VanillaItems;
 use pocketmine\tile\Tile;
+use pocketmine\block\VanillaBlocks;
 use pocketmine\entity\effect\EffectManager;
 use vixikhd\onevsone\event\PlayerArenaWinEvent;
 use vixikhd\onevsone\event\PlayerEquipEvent;
@@ -318,7 +319,7 @@ class Arena implements Listener {
                     $index = $i;
                 }
             }
-            if($event->getPlayer()->asVector3()->distance(Vector3::fromString($this->data["spawns"][$index])) > 1) {
+            if($event->getPlayer()->getPosition()->asVector3()->distance(Vector3::fromString($this->data["spawns"][$index])) > 1) {
                 // $event->cancel() will not work
                 $player->teleport(Vector3::fromString($this->data["spawns"][$index]));
             }
