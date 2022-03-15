@@ -22,8 +22,7 @@ namespace vixikhd\onevsone\commands;
 
 use pocketmine\command\Command;
 use pocketmine\command\CommandSender;
-use pocketmine\command\PluginIdentifiableCommand;
-use pocketmine\Player;
+use pocketmine\player\Player;
 use pocketmine\plugin\Plugin;
 use pocketmine\plugin\PluginBase;
 use vixikhd\onevsone\arena\Arena;
@@ -33,7 +32,7 @@ use vixikhd\onevsone\OneVsOne;
  * Class OneVsOneCommand
  * @package onevsone\commands
  */
-class OneVsOneCommand extends Command implements PluginIdentifiableCommand {
+class OneVsOneCommand extends Command{
 
     /** @var OneVsOne $plugin */
     protected $plugin;
@@ -53,7 +52,7 @@ class OneVsOneCommand extends Command implements PluginIdentifiableCommand {
      * @param array $args
      * @return mixed|void
      */
-    public function execute(CommandSender $sender, string $commandLabel, array $args) {
+    public function execute(CommandSender $sender, string $command, array $args) {
         if(!isset($args[0])) {
             $sender->sendMessage("§cUsage: §7/1vs1 help");
             return;
@@ -108,7 +107,7 @@ class OneVsOneCommand extends Command implements PluginIdentifiableCommand {
                 $arena = $this->plugin->arenas[$args[1]];
 
                 foreach ($arena->players as $player) {
-                    $player->teleport($this->plugin->getServer()->getDefaultLevel()->getSpawnLocation());
+                    $player->teleport($this->plugin->getServer()->getWorldManager()->getDefaultWorld()->getSpawnLocation());
                 }
 
                 if(is_file($file = $this->plugin->getDataFolder() . "arenas" . DIRECTORY_SEPARATOR . $args[1] . ".yml")) unlink($file);
