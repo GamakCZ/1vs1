@@ -95,7 +95,7 @@ class Arena implements Listener {
     public function __construct(OneVsOne $plugin, array $arenaFileData) {
         $this->plugin = $plugin;
         $this->data = $arenaFileData;
-        $this->setup = !$this->enable(\false);
+        $this->setup = !$this->enable(false);
 
         $this->plugin->getScheduler()->scheduleRepeatingTask(new ArenaScheduler($this), 20);
 
