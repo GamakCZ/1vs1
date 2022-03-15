@@ -27,7 +27,7 @@ use pocketmine\event\player\PlayerChatEvent;
 use pocketmine\player\Player;
 use pocketmine\plugin\PluginBase;
 use vixikhd\onevsone\arena\Arena;
-use vixikhd\onevsone\commands\OneVsOneCommand;
+use vixikhd\onevsone\OneVsOneCommand;
 use vixikhd\onevsone\math\Vector3;
 use vixikhd\onevsone\provider\YamlDataProvider;
 
