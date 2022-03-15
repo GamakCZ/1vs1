@@ -21,7 +21,7 @@ declare(strict_types=1);
 namespace vixikhd\onevsone\event;
 
 use pocketmine\event\plugin\PluginEvent;
-use pocketmine\Player;
+use pocketmine\player\Player;
 use vixikhd\onevsone\arena\Arena;
 use vixikhd\onevsone\OneVsOne;
 
