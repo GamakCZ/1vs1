@@ -61,31 +61,31 @@ class Arena implements Listener {
     const PHASE_RESTART = 2;
 
     /** @var OneVsOne $plugin */
-    public $plugin;
+    public OneVsOne $plugin;
 
     /** @var ArenaScheduler $scheduler */
-    public $scheduler;
+    public ArenaScheduler $scheduler;
 
     /** @var int $phase */
-    public $phase = 0;
+    public int $phase = 0;
 
     /** @var array $data */
-    public $data = [];
+    public array $data = [];
 
     /** @var bool $setting */
-    public $setup = false;
+    public bool $setup = false;
 
     /** @var Player[] $players */
-    public $players = [];
+    public array $players = [];
 
     /** @var Player[] $toRespawn */
-    public $toRespawn = [];
+    public array $toRespawn = [];
 
     /** @var World $level */
-    public $level = null;
+    public ?World $level = null;
 
     /** @var string $kit */
-    public $kit;
+    public string $kit;
 
     /**
      * Arena constructor.
