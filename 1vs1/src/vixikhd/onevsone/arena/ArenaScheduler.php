@@ -85,24 +85,24 @@ class ArenaScheduler extends Task {
                     }
                 }
                 else {
-                    $this->plugin->broadcastMessage("§c> You need more players to start a game!", Arena::MSG_TIP);
+                    $this->plugin->broadcastMessage("§c> You need more players to start a game!", Arena::MSG_POPUP);
                     $this->startTime = 10;
                 }
                 break;
             case Arena::PHASE_GAME:
-                $this->plugin->broadcastMessage("§a> There are " . count($this->plugin->players) . " players, time to end: " . Time::calculateTime($this->gameTime) . "", Arena::MSG_TIP);
+                $this->plugin->broadcastMessage("§a> There are " . count($this->plugin->players) . " players, time to end: " . Time::calculateTime($this->gameTime) . "", Arena::MSG_POPUP);
                 if($this->plugin->checkEnd()) $this->plugin->startRestart();
                 $this->gameTime--;
                 break;
             case Arena::PHASE_RESTART:
-                $this->plugin->broadcastMessage("§a> Restarting in {$this->restartTime} sec.", Arena::MSG_TIP);
+                $this->plugin->broadcastMessage("§a> Restarting in {$this->restartTime} sec.", Arena::MSG_POPUP);
                 $this->restartTime--;
 
                 switch ($this->restartTime) {
                     case 0:
 
                         foreach ($this->plugin->players as $player) {
-                            $player->teleport($this->plugin->plugin->getServer()->getWorldManager()->getDefaultWorld()->getSpawnLocation());
+                            $player->teleport($this->plugin->plugin->getServer()->getWorldManager()->getDefaultWorld()->getSafeSpawn());
 
                             $player->getInventory()->clearAll();
                             $player->getArmorInventory()->clearAll();
