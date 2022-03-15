@@ -29,6 +29,7 @@ use pocketmine\block\tile\Sign;
 use vixikhd\onevsone\math\Time;
 use pocketmine\block\utils\SignText;
 use vixikhd\onevsone\math\Vector3;
+use pocketmine\Server;
 
 /**
  * Class ArenaScheduler
@@ -102,7 +103,7 @@ class ArenaScheduler extends Task {
                     case 0:
 
                         foreach ($this->plugin->players as $player) {
-                            $player->teleport($this->plugin->getServer()->getWorldManager()->getDefaultWorld()->getSafeSpawn());
+                            $player->teleport($this->plugin->plugin->getServer()->getWorldManager()->getDefaultWorld()->getSafeSpawn());
 
                             $player->getInventory()->clearAll();
                             $player->getArmorInventory()->clearAll();
@@ -111,7 +112,7 @@ class ArenaScheduler extends Task {
                             $player->getHungerManager()->setFood(20);
                             $player->setHealth(20);
 
-                            $player->setGamemode($this->plugin->getServer()->getGamemode());
+                            $player->setGamemode($this->plugin->plugin->getServer()->getGamemode());
                         }
                         $this->plugin->loadArena(true);
                         $this->reloadTimer();
@@ -124,7 +125,7 @@ class ArenaScheduler extends Task {
     public function reloadSign() {
         if(!is_array($this->plugin->data["joinsign"]) || empty($this->plugin->data["joinsign"])) return;
 
-        $signPos = Position::fromObject(Vector3::fromString($this->plugin->data["joinsign"][0]), $this->plugin->getServer()->getWorldManager()->getWorldByName($this->plugin->data["joinsign"][1]));
+        $signPos = Position::fromObject(Vector3::fromString($this->plugin->data["joinsign"][0]), $this->plugin->plugin->getServer()->getWorldManager()->getWorldByName($this->plugin->data["joinsign"][1]));
 
         if(!$signPos->getWorld() instanceof World) return;
 
