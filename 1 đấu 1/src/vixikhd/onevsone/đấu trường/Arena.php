@@ -31,7 +31,7 @@ use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\event\player\PlayerRespawnEvent;
 use pocketmine\item\Item;
 use pocketmine\world\World;
-use pocketmine\level\Position;
+use pocketmine\world\Position;
 use pocketmine\player\Player;
 use pocketmine\item\ItemFactory;
 use pocketmine\item\VanillaItems;
