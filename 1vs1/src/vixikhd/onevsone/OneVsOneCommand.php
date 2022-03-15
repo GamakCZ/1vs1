@@ -48,7 +48,7 @@ class OneVsOneCommand extends Command{
 
     /**
      * @param CommandSender $sender
-     * @param string $commandLabel
+     * @param string $command
      * @param array $args
      * @return mixed|void
      */
