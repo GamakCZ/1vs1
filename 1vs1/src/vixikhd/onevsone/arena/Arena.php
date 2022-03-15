@@ -37,6 +37,7 @@ use pocketmine\player\Player;
 use pocketmine\item\ItemFactory;
 use pocketmine\item\VanillaItems;
 use pocketmine\tile\Tile;
+use pocketmine\entity\effect\EffectManager;
 use vixikhd\onevsone\event\PlayerArenaWinEvent;
 use vixikhd\onevsone\event\PlayerEquipEvent;
 use vixikhd\onevsone\math\Vector3;
