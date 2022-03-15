@@ -77,7 +77,7 @@ class Arena implements Listener {
     /** @var Player[] $toRespawn */
     public $toRespawn = [];
 
-    /** @var Level $level */
+    /** @var World $level */
     public $level = null;
 
     /** @var string $kit */
@@ -141,7 +141,7 @@ class Arena implements Listener {
         $player->getArmorInventory()->clearAll();
         $player->getCursorInventory()->clearAll();
 
-        $player->setGamemode($player::ADVENTURE);
+        $player->setGamemode(GameMode::ADVENTURE());
         $player->setHealth(20);
         $player->setFood(20);
 
