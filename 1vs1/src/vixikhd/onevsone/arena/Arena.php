@@ -248,7 +248,7 @@ class Arena implements Listener {
             return;
         }
 
-        $player->addTitle("§aYOU WON!");
+        $player->sendTitle("§aYOU WON!");
         $this->plugin->getServer()->getPluginManager()->callEvent(new PlayerArenaWinEvent($this->plugin, $player, $this));
         $this->plugin->getServer()->broadcastMessage("§a[1vs1] Player {$player->getName()} won the match at {$this->level->getFolderName()}!");
         $this->phase = self::PHASE_RESTART;
