@@ -292,7 +292,7 @@ class Arena implements Listener {
                     $player->sendPopup($message);
                     break;
                 case self::MSG_TITLE:
-                    $player->addTitle($message, $subMessage);
+                    $player->sendTitle($message, $subMessage);
                     break;
             }
         }
