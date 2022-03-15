@@ -2,6 +2,6 @@
 branches:
 - master
 projects:
-  1vs1:
+  1vs1-PM4:
     path: 1vs1/
 ...
