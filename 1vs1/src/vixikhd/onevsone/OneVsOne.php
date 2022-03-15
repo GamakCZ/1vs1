@@ -163,7 +163,7 @@ class OneVsOne extends PluginBase implements Listener {
         if(isset($this->setupData[$player->getName()])) {
             switch ($this->setupData[$player->getName()]) {
                 case 0:
-                    $this->setters[$player->getName()]->data["joinsign"] = [(new Vector3($block->getX(), $block->getY(), $block->getZ()))->__toString(), $block->getLevel()->getFolderName()];
+                    $this->setters[$player->getName()]->data["joinsign"] = [(new Vector3($block->getPosition()->getX(), $block->getPosition()->getY(), $block->getPosition()->getZ()))->__toString(), $block->getWorld()->getFolderName()];
                     $player->sendMessage("§a> Join sign updated!");
                     unset($this->setupData[$player->getName()]);
                     $event->cancel();
