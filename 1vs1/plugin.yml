@@ -6,9 +6,6 @@ author: VixikHD , BeeAZZ
 description: 1vs1 minigame plugin
 
 permissions:
-  1vs1.cmd:
-    description: Permission to all OneVsOne commands
-    default: op
   1vs1.cmd.help:
     description: Permission for /1vs1 help
     default: op
