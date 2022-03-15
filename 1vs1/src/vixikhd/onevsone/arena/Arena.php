@@ -162,7 +162,7 @@ class Arena implements Listener {
 
 
         $kitData = $this->plugin->dataProvider->config["kits"][$this->kit];
-        if(isset($kitData["helmet"])) $inv->setHelmet(Item::get($kitData["helmet"][0], $kitData["helmet"][1], $kitData["helmet"][2]));
+        if(isset($kitData["helmet"])) $inv->setHelmet(ItemFactory::getInstance()->get($kitData["helmet"][0], $kitData["helmet"][1], $kitData["helmet"][2]));
         if(isset($kitData["chestplate"])) $inv->setChestplate(ItemFactory::getInstance()->get($kitData["chestplate"][0], $kitData["chestplate"][1], $kitData["chestplate"][2]));
         if(isset($kitData["leggings"])) $inv->setLeggings(ItemFactory::getInstance()->get($kitData["leggings"][0], $kitData["leggings"][1], $kitData["leggings"][2]));
         if(isset($kitData["boots"])) $inv->setBoots(ItemFactory::getInstance()->get($kitData["boots"][0], $kitData["boots"][1], $kitData["boots"][2]));
