@@ -143,7 +143,7 @@ class Arena implements Listener {
 
         $player->setGamemode(GameMode::ADVENTURE());
         $player->setHealth(20);
-        $player->setFood(20);
+        $player->getHungerManager()->setFood(20);
 
         $inv = $player->getArmorInventory();
         if(empty($this->plugin->dataProvider->config["kits"]) || !is_array($this->plugin->dataProvider->config["kits"]) || $this->kit === null) {
@@ -169,7 +169,7 @@ class Arena implements Listener {
         foreach ($kitData as $slot => [$id, $damage, $count]) {
             if(is_numeric($slot)) {
                 $slot = (int)$slot;
-                $player->getInventory()->setItem($slot, ItemFactory::getInstance()->get($id, $damage, $count));
+                $player->getInventory()->setItem($slot, ItemFactory::getInstance()->get($id, $damage, $count)); 
             }
         }
 
@@ -205,13 +205,13 @@ class Arena implements Listener {
         $player->setGamemode($this->plugin->getServer()->getDefaultGamemode());
 
         $player->setHealth(20);
-        $player->setFood(20);
+        $player->getHungerManager()->setFood(20);
 
         $player->getInventory()->clearAll();
         $player->getArmorInventory()->clearAll();
         $player->getCursorInventory()->clearAll();
 
-        $player->teleport($this->plugin->getServer()->getDefaultLevel()->getSpawnLocation());
+        $player->teleport($this->plugin->getServer()->getWorldManager()->getDefaultWorld()->getSpawnLocation());
 
         if(!$death) {
             $this->broadcastMessage("§a> Player {$player->getName()} left the match. §7[".count($this->players)."/{$this->data["slots"]}]");
@@ -316,7 +316,7 @@ class Arena implements Listener {
                 }
             }
             if($event->getPlayer()->asVector3()->distance(Vector3::fromString($this->data["spawns"][$index])) > 1) {
-                // $event->setCancelled() will not work
+                // $event->cancel() will not work
                 $player->teleport(Vector3::fromString($this->data["spawns"][$index]));
             }
         }
@@ -331,7 +331,7 @@ class Arena implements Listener {
         if(!$player instanceof Player) return;
 
         if($this->inGame($player) && $this->phase == self::PHASE_LOBBY && !$this->plugin->dataProvider->config["hunger"]) {
-            $event->setCancelled(true);
+            $event->cancel(true);
         }
     }
 
@@ -343,17 +343,17 @@ class Arena implements Listener {
         $block = $event->getBlock();
 
         if($this->inGame($player) && $event->getBlock()->getId() == Block::CHEST && $this->phase == self::PHASE_LOBBY) {
-            $event->setCancelled(\true);
+            $event->cancel();
             return;
         }
 
-        if(!$block->getLevel()->getTile($block) instanceof Tile) {
+        if(!$block->getWorld()->getTile($block) instanceof Tile) {
             return;
         }
 
-        $signPos = Position::fromObject(Vector3::fromString($this->data["joinsign"][0]), $this->plugin->getServer()->getLevelByName($this->data["joinsign"][1]));
+        $signPos = Position::fromObject(Vector3::fromString($this->data["joinsign"][0]), $this->plugin->getServer()->getWorldManager()->getWorldByName($this->data["joinsign"][1]));
 
-        if((!$signPos->equals($block)) || $signPos->getLevel()->getId() != $block->getLevel()->getId()) {
+        if((!$signPos->equals($block)) || $signPos->getWorld()->getId() != $block->getWorld()->getId()) {
             return;
         }
 
@@ -414,7 +414,7 @@ class Arena implements Listener {
     /**
      * @param EntityLevelChangeEvent $event
      */
-    public function onLevelChange(EntityLevelChangeEvent $event) {
+    public function onLevelChange(EntityTeleportEvent $event) {
         $player = $event->getEntity();
         if(!$player instanceof Player) return;
         if($this->inGame($player)) {
@@ -434,18 +434,18 @@ class Arena implements Listener {
         if(!$restart) {
             $this->plugin->getServer()->getPluginManager()->registerEvents($this, $this->plugin);
 
-            if(!$this->plugin->getServer()->isLevelLoaded($this->data["level"])) {
-                $this->plugin->getServer()->loadLevel($this->data["level"]);
+            if(!$this->plugin->getServer()->getWorldManager()->isWorldLoaded($this->data["level"])) {
+                $this->plugin->getServer()->getWorldManager()->loadWorld($this->data["level"]);
             }
 
-            $this->level = $this->plugin->getServer()->getLevelByName($this->data["level"]);
+            $this->level = $this->plugin->getServer()->getWorldManager()->getWorldByName($this->data["level"]);
         }
 
         else {
             $this->scheduler->reloadTimer();
         }
 
-        if(!$this->level instanceof Level) $this->level = $this->plugin->getServer()->getLevelByName($this->data["level"]);
+        if(!$this->level instanceof World) $this->level = $this->plugin->getServer()->getWorldManager()->getWorldByName($this->data["level"]);
 
         $keys = array_keys($this->plugin->dataProvider->config["kits"]);
         $this->kit = $keys[array_rand($keys, 1)];
@@ -465,13 +465,13 @@ class Arena implements Listener {
         if($this->data["level"] == null) {
             return false;
         }
-        if(!$this->plugin->getServer()->isLevelGenerated($this->data["level"])) {
+        if(!$this->plugin->getServer()->getWorldManager()->isWorldGenerated($this->data["level"])) {
             return false;
         }
         else {
-            if(!$this->plugin->getServer()->isLevelLoaded($this->data["level"]))
-                $this->plugin->getServer()->loadLevel($this->data["level"]);
-            $this->level = $this->plugin->getServer()->getLevelByName($this->data["level"]);
+            if(!$this->plugin->getServer()->getWorldManager()->isWorldLoaded($this->data["level"]))
+                $this->plugin->getServer()->getWorldManager()->loadWorld($this->data["level"]);
+            $this->level = $this->plugin->getServer()->getWorldManager()->getWorldByName($this->data["level"]);
         }
         if(!is_int($this->data["slots"])) {
             return false;
