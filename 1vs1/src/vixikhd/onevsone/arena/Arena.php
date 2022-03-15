@@ -202,9 +202,9 @@ class Arena implements Listener {
                 break;
         }
 
-        $player->getEffects()->removeAllEffects();
+        $player->getEffects()->clear();
 
-        $player->setGamemode($this->plugin->getServer()->getGameMode()->getDefaultGamemode());
+        $player->setGamemode($this->plugin->getServer()->getGameMode());
 
         $player->setHealth(20);
         $player->getHungerManager()->setFood(20);
@@ -334,7 +334,7 @@ class Arena implements Listener {
         if(!$player instanceof Player) return;
 
         if($this->inGame($player) && $this->phase == self::PHASE_LOBBY && !$this->plugin->dataProvider->config["hunger"]) {
-            $event->cancel(true);
+            $event->cancel();
         }
     }
 
@@ -356,7 +356,7 @@ class Arena implements Listener {
 
         $signPos = Position::fromObject(Vector3::fromString($this->data["joinsign"][0]), $this->plugin->getServer()->getWorldManager()->getWorldByName($this->data["joinsign"][1]));
 
-        if((!$signPos->equals($block)) || $signPos->getWorld()->getId() != $block->getWorld()->getId()) {
+        if((!$signPos->equals($block)) || $signPos->getWorld()->getId() != $block->getPosition()->getWorld()->getId()) {
             return;
         }
 
