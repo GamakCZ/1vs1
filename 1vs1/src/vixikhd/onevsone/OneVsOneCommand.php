@@ -71,14 +71,13 @@ class OneVsOneCommand extends Command{
                      "§7/1vs1 set : Set OneVsOne arena\n".
                     "§7/1vs1 arenas : Displays list of arenas\n" .
                     "§7/1vs1 join : Connect player to the random arena");
-
                 break;
+             }
             case "create":
                 if(!$sender->hasPermission("1vs1.cmd.create")) {
                     $sender->sendMessage("§cYou have not permissions to use this command!");
                     break;
-                }}
-                 
+                }
                 if(!isset($args[1])) {
                     $sender->sendMessage("§cUsage: §7/1vs1 create <arenaName>");
                     break;
@@ -190,5 +189,4 @@ class OneVsOneCommand extends Command{
     public function getPlugin(): Plugin {
         return $this->plugin;
     }
-
- 
+}
