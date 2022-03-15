@@ -24,7 +24,7 @@ use pocketmine\command\Command;
 use pocketmine\event\block\BlockBreakEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerChatEvent;
-use pocketmine\Player;
+use pocketmine\player\Player;
 use pocketmine\plugin\PluginBase;
 use vixikhd\onevsone\arena\Arena;
 use vixikhd\onevsone\commands\OneVsOneCommand;
@@ -55,18 +55,18 @@ class OneVsOne extends PluginBase implements Listener {
     /** @var int[] $setupData */
     public $setupData = [];
 
-    public function onLoad() {
+    public function onLoad(): void{
         $this->dataProvider = new YamlDataProvider($this);
     }
 
-    public function onEnable() {
+    public function onEnable(): void {
         $this->getServer()->getPluginManager()->registerEvents($this, $this);
         $this->dataProvider->loadArenas();
         $this->emptyArenaChooser = new EmptyArenaChooser($this);
         $this->getServer()->getCommandMap()->register("1vs1", $this->commands[] = new OneVsOneCommand($this));
     }
 
-    public function onDisable() {
+    public function onDisable(): void {
         $this->dataProvider->saveArenas();
     }
 
@@ -80,7 +80,7 @@ class OneVsOne extends PluginBase implements Listener {
             return;
         }
 
-        $event->setCancelled(\true);
+        $event->cancel();
         $args = explode(" ", $event->getMessage());
 
         /** @var Arena $arena */
@@ -100,7 +100,7 @@ class OneVsOne extends PluginBase implements Listener {
                     $player->sendMessage("§cUsage: §7level <levelName>");
                     break;
                 }
-                if(!$this->getServer()->isLevelGenerated($args[1])) {
+                if(!$this->getServer()->getWorldManager()->isWorldGenerated($args[1])) {
                     $player->sendMessage("§c> Level $args[1] does not found!");
                     break;
                 }
@@ -166,7 +166,7 @@ class OneVsOne extends PluginBase implements Listener {
                     $this->setters[$player->getName()]->data["joinsign"] = [(new Vector3($block->getX(), $block->getY(), $block->getZ()))->__toString(), $block->getLevel()->getFolderName()];
                     $player->sendMessage("§a> Join sign updated!");
                     unset($this->setupData[$player->getName()]);
-                    $event->setCancelled(\true);
+                    $event->cancel();
                     break;
             }
         }
