@@ -1,0 +1,29 @@
+name: 1vs1
+api: 4.0.0
+version: 1.0.2
+main: vixikhd\onevsone\OneVsOne
+author: VixikHD , BeeAZZ
+description: 1vs1 minigame plugin
+
+permissions:
+  1vs1.cmd:
+    description: Permission to all OneVsOne commands
+    default: op
+  1vs1.cmd.help:
+    description: Permission for /1vs1 help
+    default: op
+  1vs1.cmd.create:
+    description: Permission for /1vs1 create
+    default: op
+  1vs1.cmd.remove:
+    description: Permission for /1vs1 remove
+    default: op
+  1vs1.cmd.set:
+    description: Permission for /1vs1 set
+    default: op
+  1vs1.cmd.arenas:
+    description: Permission for /1vs1 arenas
+    default: op
+  1vs1.cmd.join:
+    description: Permission for /1vs1 join
+    default: true
