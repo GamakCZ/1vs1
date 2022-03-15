@@ -110,7 +110,7 @@ class ArenaScheduler extends Task {
                             $player->getHungerManager()->setFood(20);
                             $player->setHealth(20);
 
-                            $player->setGamemode($this->plugin->plugin->getServer()->getDefaultGamemode());
+                            $player->setGamemode($this->plugin->plugin->getServer()->getGamemode());
                         }
                         $this->plugin->loadArena(true);
                         $this->reloadTimer();
@@ -168,7 +168,7 @@ class ArenaScheduler extends Task {
 
         /** @var Sign $sign */
         $sign = $signPos->getWorld()->getTile($signPos);
-        $sign->setText($signText[0], $signText[1], $signText[2], $signText[3]);
+        $sign->setText([$signText[0], $signText[1], $signText[2], $signText[3]]);
     }
 
     public function reloadTimer() {
