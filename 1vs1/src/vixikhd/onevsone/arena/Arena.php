@@ -97,7 +97,7 @@ class Arena implements Listener {
         $this->data = $arenaFileData;
         $this->setup = !$this->enable(\false);
 
-        $this->plugin->getScheduler()->scheduleRepeatingTask($this->scheduler = new ArenaScheduler($this), 20);
+        $this->plugin->getScheduler()->scheduleRepeatingTask(new ArenaScheduler($this), 20);
 
         if($this->setup) {
             if(empty($this->data)) {
@@ -320,7 +320,7 @@ class Arena implements Listener {
                     $index = $i;
                 }
             }
-            if($event->getPlayer()->getPosition()->asVector3()->distance(Vector3::fromString($this->data["spawns"][$index])) > 1) {
+            if($event->getPlayer()->getPosition()->distance(Vector3::fromString($this->data["spawns"][$index])) > 1) {
                 // $event->cancel() will not work
                 $player->teleport(Vector3::fromString($this->data["spawns"][$index]));
             }
@@ -419,7 +419,7 @@ class Arena implements Listener {
     /**
      * @param EntityTeleportEvent $event
      */
-    public function onLevelChange(EntityTeleportEvent $event) {
+    public function onTeleport(EntityTeleportEvent $event) {
         $player = $event->getEntity();
         if(!$player instanceof Player) return;
         if($this->inGame($player)) {
