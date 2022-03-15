@@ -25,7 +25,7 @@ use pocketmine\world\Position;
 use pocketmine\world\sound\AnvilUseSound;
 use pocketmine\world\sound\ClickSound;
 use pocketmine\scheduler\Task;
-use pocketmine\tile\Sign;
+use pocketmine\block\tile\Sign;
 use vixikhd\onevsone\math\Time;
 use vixikhd\onevsone\math\Vector3;
 
