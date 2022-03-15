@@ -150,7 +150,7 @@ class Arena implements Listener {
         $player->getHungerManager()->setFood(20);
 
         $inv = $player->getArmorInventory();
-        if(empty($this->plugin->dataProvider->config["kits"]) || !is_array($this->plugin->dataProvider->config["kits"]) || $this->kit === null) {
+        if(empty($this->plugin->dataProvider->config["kits"]) || !is_array($this->plugin->dataProvider->config["kits"]) || $this->kit == null) {
             $inv->setHelmet(VanillaItems::DIAMOND_HELMET());
             $inv->setChestplate(VanillaItems::DIAMOND_CHESTPLATE());
             $inv->setLeggings(VanillaItems::DIAMOND_LEGGINGS());
