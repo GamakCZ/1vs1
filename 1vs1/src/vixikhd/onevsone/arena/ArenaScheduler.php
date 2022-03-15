@@ -139,7 +139,7 @@ class ArenaScheduler extends Task {
         if($this->plugin->setup) {
             /** @var Sign $sign */
             $sign = $signPos->getWorld()->getTile($signPos);
-            $sign->setText($signText[0], $signText[1], $signText[2], $signText[3]);
+            $sign->setText([$signText[0], $signText[1], $signText[2], $signText[3]]);
             return;
         }
 
