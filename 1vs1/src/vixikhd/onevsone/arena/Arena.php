@@ -351,7 +351,7 @@ class Arena implements Listener {
             return;
         }
 
-        if(!$block->getWorld()->getTile($block) instanceof Tile) {
+        if(!$block->getPosition()->getWorld()->getTile($block) instanceof Tile) {
             return;
         }
 
