@@ -30,15 +30,15 @@ Go to the game and go to the map you want to create a 1vs1 zone and follow the s
 
 <br>
 
-chat **spawn 1** Get Spawn Coordinates 1
+Chat **spawn 1** Get Spawn Coordinates 1
 
 <br>
 
-chat **spawn 2** Get Spawn Coordinates 2
+Chat **spawn 2** Get Spawn Coordinates 2
 
 <br>
 
-chat **level <nameworld>** Enter the name of the world you want to create 1vs1
+Chat **level <nameworld>** Enter the name of the world you want to create 1vs1
 
 <br>
 
@@ -58,21 +58,24 @@ Restart Server And Use !
 
 <br>
 
-  1vs1.cmd.help:
-    description: Permission for **/1vs1 help**
-    default: op
-  1vs1.cmd.create:
-    description: Permission for **/1vs1 create**
-    default: op
-  1vs1.cmd.remove:
-    description: Permission for **/1vs1 remove**
-    default: op
-  1vs1.cmd.set:
-    description: Permission for **/1vs1 set**
-    default: op
-  1vs1.cmd.arenas:
-    description: Permission for **/1vs1 arenas**
-    default: op
-  1vs1.cmd.join:
-    description: Permission for **/1vs1 join**
-    default: true
+  1vs1.cmd.help: op
+
+<br>
+
+  1vs1.cmd.create: op
+
+<br>
+
+  1vs1.cmd.remove: op
+
+<br>
+
+  1vs1.cmd.set: op
+
+<br>
+
+  1vs1.cmd.arenas: op
+
+<br>
+
+  1vs1.cmd.join: true
