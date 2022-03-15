@@ -121,8 +121,8 @@ class OneVsOne extends PluginBase implements Listener {
                     break;
                 }
 
-                $arena->data["spawns"]["spawn-{$args[1]}"] = (new Vector3($player->getX(), $player->getY(), $player->getZ()))->__toString();
-                $player->sendMessage("§a> Spawn $args[1] set to X: " . (string)round($player->getX()) . " Y: " . (string)round($player->getY()) . " Z: " . (string)round($player->getZ()));
+                $arena->data["spawns"]["spawn-{$args[1]}"] = (new Vector3($player->getPosition()->getX(), $player->getPosition()->getY(), $player->getPosition()->getZ()))->__toString();
+                $player->sendMessage("§a> Spawn $args[1] set to X: " . (string)round($player->getPosition()->getX()) . " Y: " . (string)round($player->getPosition()->getY()) . " Z: " . (string)round($player->getPosition()->getZ()));
                 break;
             case "joinsign":
                 $player->sendMessage("§a> Break block to set join sign!");
