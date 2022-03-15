@@ -44,6 +44,7 @@ use vixikhd\onevsone\event\PlayerArenaWinEvent;
 use vixikhd\onevsone\event\PlayerEquipEvent;
 use vixikhd\onevsone\math\Vector3;
 use vixikhd\onevsone\OneVsOne;
+use pocketmine\Server;
 
 /**
  * Class Arena
