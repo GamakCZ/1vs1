@@ -27,6 +27,7 @@ use pocketmine\world\sound\ClickSound;
 use pocketmine\scheduler\Task;
 use pocketmine\block\tile\Sign;
 use vixikhd\onevsone\math\Time;
+use pocketmine\block\utils\SignText;
 use vixikhd\onevsone\math\Vector3;
 
 /**
@@ -139,7 +140,7 @@ class ArenaScheduler extends Task {
         if($this->plugin->setup) {
             /** @var Sign $sign */
             $sign = $signPos->getWorld()->getTile($signPos);
-            $sign->setText([$signText[0], $signText[1], $signText[2], $signText[3]]);
+            $sign->setText(new SignText([$signText[0], $signText[1], $signText[2], $signText[3]]));
             return;
         }
 
@@ -168,7 +169,7 @@ class ArenaScheduler extends Task {
 
         /** @var Sign $sign */
         $sign = $signPos->getWorld()->getTile($signPos);
-        $sign->setText([$signText[0], $signText[1], $signText[2], $signText[3]]);
+        $sign->setText(new SignText([$signText[0], $signText[1], $signText[2], $signText[3]]));
     }
 
     public function reloadTimer() {
