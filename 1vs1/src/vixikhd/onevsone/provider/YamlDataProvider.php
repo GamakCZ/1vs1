@@ -20,7 +20,7 @@ declare(strict_types=1);
 
 namespace vixikhd\onevsone\provider;
 
-use pocketmine\level\Level;
+use pocketmine\world\World;
 use pocketmine\utils\Config;
 use vixikhd\onevsone\arena\Arena;
 use vixikhd\onevsone\OneVsOne;
