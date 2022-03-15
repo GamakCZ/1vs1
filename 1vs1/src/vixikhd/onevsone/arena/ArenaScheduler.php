@@ -74,12 +74,12 @@ class ArenaScheduler extends Task {
                     if($this->startTime == 0) {
                         $this->plugin->startGame();
                         foreach ($this->plugin->players as $player) {
-                            $this->plugin->level->addSound(new AnvilUseSound($player->getPosition()->asVector3()));
+                            $this->plugin->level->addSound($player->getPosition()->asVector3(), new AnvilUseSound());
                         }
                     }
                     else {
                         foreach ($this->plugin->players as $player) {
-                            $this->plugin->level->addSound(new ClickSound($player->getPosition()->asVector3()));
+                            $this->plugin->level->addSound($player->getPosition()->asVector3(), new ClickSound());
                         }
                     }
                 }
