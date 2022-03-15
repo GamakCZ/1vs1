@@ -346,7 +346,7 @@ class Arena implements Listener {
         $player = $event->getPlayer();
         $block = $event->getBlock();
 
-        if($this->inGame($player) && $event->getBlock()->getId() == VanillaBlocks::CHEST() && $this->phase == self::PHASE_LOBBY) {
+        if($this->inGame($player) && $event->getBlock()->getId() == (VanillaBlocks::CHEST()) && $this->phase == self::PHASE_LOBBY) {
             $event->cancel();
             return;
         }
