@@ -36,7 +36,7 @@ use pocketmine\world\Position;
 use pocketmine\player\Player;
 use pocketmine\item\ItemFactory;
 use pocketmine\item\VanillaItems;
-use pocketmine\tile\Tile;
+use pocketmine\block\tile\Tile;
 use pocketmine\block\VanillaBlocks;
 use pocketmine\entity\effect\EffectManager;
 use vixikhd\onevsone\event\PlayerArenaWinEvent;
@@ -345,8 +345,8 @@ class Arena implements Listener {
     public function onInteract(PlayerInteractEvent $event) {
         $player = $event->getPlayer();
         $block = $event->getBlock();
-        $chests = VanillaBlocks::CHEST();
-        if($this->inGame($player) && $event->getBlock()->getId() == $chests && $this->phase == self::PHASE_LOBBY) {
+        
+        if($this->inGame($player) && $event->getBlock() instanceof CHEST && $this->phase == self::PHASE_LOBBY) {
             $event->cancel();
             return;
         }
@@ -401,7 +401,7 @@ class Arena implements Listener {
     public function onRespawn(PlayerRespawnEvent $event) {
         $player = $event->getPlayer();
         if(isset($this->toRespawn[$player->getName()])) {
-            $event->setRespawnPosition($this->plugin->getServer()->getDefaultLevel()->getSpawnLocation());
+            $event->setRespawnPosition($this->plugin->getServer()->getWorldManager()->getDefaultWorld()->getSpawnLocation());
             unset($this->toRespawn[$player->getName()]);
         }
     }
