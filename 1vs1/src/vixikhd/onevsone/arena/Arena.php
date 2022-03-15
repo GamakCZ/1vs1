@@ -21,7 +21,7 @@ declare(strict_types=1);
 namespace vixikhd\onevsone\arena;
 
 use pocketmine\block\Block;
-use pocketmine\event\entity\EntityLevelChangeEvent;
+use pocketmine\event\entity\EntityTeleportEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerDeathEvent;
 use pocketmine\event\player\PlayerExhaustEvent;
@@ -30,9 +30,11 @@ use pocketmine\event\player\PlayerMoveEvent;
 use pocketmine\event\player\PlayerQuitEvent;
 use pocketmine\event\player\PlayerRespawnEvent;
 use pocketmine\item\Item;
-use pocketmine\level\Level;
+use pocketmine\world\World;
 use pocketmine\level\Position;
-use pocketmine\Player;
+use pocketmine\player\Player;
+use pocketmine\item\ItemFactory;
+use pocketmine\item\VanillaItems;
 use pocketmine\tile\Tile;
 use vixikhd\onevsone\event\PlayerArenaWinEvent;
 use vixikhd\onevsone\event\PlayerEquipEvent;
@@ -145,13 +147,13 @@ class Arena implements Listener {
 
         $inv = $player->getArmorInventory();
         if(empty($this->plugin->dataProvider->config["kits"]) || !is_array($this->plugin->dataProvider->config["kits"]) || $this->kit === null) {
-            $inv->setHelmet(Item::get(Item::DIAMOND_HELMET));
-            $inv->setChestplate(Item::get(Item::DIAMOND_CHESTPLATE));
-            $inv->setLeggings(Item::get(Item::DIAMOND_LEGGINGS));
-            $inv->setBoots(Item::get(Item::DIAMOND_BOOTS));
+            $inv->setHelmet(VanillaItems::DIAMOND_HELMET());
+            $inv->setChestplate(VanillaItems::DIAMOND_CHESTPLATE());
+            $inv->setLeggings(VanillaItems::DIAMOND_LEGGINGS());
+            $inv->setBoots(VanillaItems::DIAMOND_BOOTS());
 
-            $player->getInventory()->addItem(Item::get(Item::IRON_SWORD));
-            $player->getInventory()->addItem(Item::get(Item::GOLDEN_APPLE, 0, 5));
+            $player->getInventory()->addItem(VanillaItems::IRON_SWORD());
+            $player->getInventory()->addItem(VanillaItems::GOLDEN_APPLE()->setCount(5));
             $event = new PlayerEquipEvent($this->plugin, $player, $this);
             $event->call();
             return;
@@ -167,7 +169,7 @@ class Arena implements Listener {
         foreach ($kitData as $slot => [$id, $damage, $count]) {
             if(is_numeric($slot)) {
                 $slot = (int)$slot;
-                $player->getInventory()->setItem($slot, Item::get($id, $damage, $count));
+                $player->getInventory()->setItem($slot, ItemFactory::getInstance()->get($id, $damage, $count));
             }
         }
 
