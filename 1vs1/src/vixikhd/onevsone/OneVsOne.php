@@ -28,6 +28,7 @@ use pocketmine\player\Player;
 use pocketmine\plugin\PluginBase;
 use vixikhd\onevsone\arena\Arena;
 use vixikhd\onevsone\OneVsOneCommand;
+use vixikhd\onevsone\arena\ArenaScheduler
 use vixikhd\onevsone\math\Vector3;
 use vixikhd\onevsone\provider\YamlDataProvider;
 
@@ -64,6 +65,7 @@ class OneVsOne extends PluginBase implements Listener {
         $this->dataProvider->loadArenas();
         $this->emptyArenaChooser = new EmptyArenaChooser($this);
         $this->getServer()->getCommandMap()->register("1vs1", $this->commands[] = new OneVsOneCommand($this));
+        $this->getScheduler()->scheduleRepeatingTask(new ArenaScheduler($this), 20);
     }
 
     public function onDisable(): void {
