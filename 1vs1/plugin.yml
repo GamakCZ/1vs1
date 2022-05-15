@@ -1,8 +1,8 @@
 name: 1vs1
 api: 4.0.0
-version: 1.0.3
+version: 1.0.3l4
 main: vixikhd\onevsone\OneVsOne
-author: VixikHD , BeeAZZ
+author: VixikHD , BeeAZ
 description: 1vs1 minigame plugin
 
 permissions:
