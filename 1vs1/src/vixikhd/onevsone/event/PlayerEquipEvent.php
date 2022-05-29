@@ -21,50 +21,43 @@ declare(strict_types=1);
 namespace vixikhd\onevsone\event;
 
 use pocketmine\event\plugin\PluginEvent;
-use pocketmine\Player;
+use pocketmine\player\Player;
 use vixikhd\onevsone\arena\Arena;
 use vixikhd\onevsone\OneVsOne;
 
 /**
  * Class PlayerEquipEvent
+ *
  * @package vixikhd\onevsone\event
  *
  * called after kit is equipped, so you can replace items in inventories
  */
-class PlayerEquipEvent extends PluginEvent {
+class PlayerEquipEvent extends PluginEvent
+{
 
-    /** @var null $handlerList */
-    public static $handlerList = \null;
+	/** @var null $handlerList */
+	public static $handlerList = null;
 
-    /** @var Player $player */
-    protected $player;
+	/** @var Player $player */
+	protected Player $player;
 
-    /** @var Arena $arena */
-    protected $arena;
+	/** @var Arena $arena */
+	protected Arena $arena;
 
-    /**
-     * PlayerEquipEvent constructor.
-     * @param OneVsOne $plugin
-     * @param Player $player
-     * @param Arena $arena
-     */
-    public function __construct(OneVsOne $plugin, Player $player, Arena $arena) {
-        $this->player = $player;
-        $this->arena = $arena;
-        parent::__construct($plugin);
-    }
+	public function __construct(OneVsOne $plugin, Player $player, Arena $arena)
+	{
+		$this->player = $player;
+		$this->arena = $arena;
+		parent::__construct($plugin);
+	}
 
-    /**
-     * @return Player $player
-     */
-    public function getPlayer(): Player {
-        return $this->player;
-    }
+	public function getPlayer(): Player
+	{
+		return $this->player;
+	}
 
-    /**
-     * @return Arena $arena
-     */
-    public function getArena(): Arena {
-        return $this->arena;
-    }
+	public function getArena(): Arena
+	{
+		return $this->arena;
+	}
 }

@@ -1,5 +1,6 @@
 --- # Poggit-CI Manifest. Open the CI at https://poggit.pmmp.io/ci/GamakCZ/1vs1
 branches:
+- PM4
 - master
 projects:
   1vs1:
