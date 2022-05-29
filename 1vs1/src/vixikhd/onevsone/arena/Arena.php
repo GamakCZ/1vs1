@@ -516,6 +516,18 @@ class Arena implements Listener
 		}
 	}
 
+        /**
+        * @param EntityShootBowEvent $event
+        */
+        public function onShot(EntityShootBowEvent $event) :void
+        {
+              $player = $event->getEntity();
+              if($player instanceof Player) {
+                  if($this->inGame($player) && $this->phase !== 1)
+                      $event->cancel();
+              }
+        }
+
 	public function __destruct()
 	{
 		unset($this->scheduler);
