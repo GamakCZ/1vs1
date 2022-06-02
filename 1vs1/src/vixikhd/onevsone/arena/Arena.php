@@ -516,9 +516,6 @@ class Arena implements Listener
 		}
 	}
 
-        /**
-        * @param EntityShootBowEvent $event
-        */
         public function onShot(EntityShootBowEvent $event) :void
         {
               $player = $event->getEntity();
