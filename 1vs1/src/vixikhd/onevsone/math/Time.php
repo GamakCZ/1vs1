@@ -29,6 +29,6 @@ class Time
 {
 	public static function calculateTime(int $time): string
 	{
-		return gmdate("i:s", $time);
+		return gmdate('i:s', $time);
 	}
 }
