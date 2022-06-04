@@ -397,7 +397,7 @@ class Arena implements Listener
             return;
         }
         foreach ($event->getDrops() as $item) {
-            $player->getWorld()->dropItem($player->getLocation(), $item);
+            $player->getWorld()->dropItem($player->getPosition()->asVector3(), $item);
         }
         $this->toRespawn[$player->getName()] = $player;
         $this->disconnectPlayer($player, '', true);
