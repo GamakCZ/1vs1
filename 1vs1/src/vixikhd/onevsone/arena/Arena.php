@@ -529,7 +529,7 @@ class Arena implements Listener
 	public function onLevelChange(EntityTeleportEvent $event): void
 	{
 		$player = $event->getEntity();
-        $to = $event->getTo();
+		$to = $event->getTo();
 		if (!$player instanceof Player) {
 			return;
 		}
