@@ -22,8 +22,10 @@ namespace vixikhd\onevsone\arena;
 
 use pocketmine\block\BlockLegacyIds;
 use pocketmine\block\tile\Tile;
+use pocketmine\entity\projectile\Arrow;
 use pocketmine\event\entity\EntityShootBowEvent;
 use pocketmine\event\entity\EntityTeleportEvent;
+use pocketmine\event\entity\ProjectileHitBlockEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerDeathEvent;
 use pocketmine\event\player\PlayerExhaustEvent;
@@ -508,7 +510,16 @@ class Arena implements Listener
 		}
 	}
 
-    public function onEntityUseBow(EntityShootBowEvent $event) {
+    public function onProjectileHitBlock(ProjectileHitBlockEvent $event): void
+    {
+        $projectile = $event->getEntity();
+        if ($projectile instanceof Arrow && $projectile->getWorld() === $this->level) {
+            $projectile->flagForDespawn();
+        }
+    }
+
+    public function onEntityUseBow(EntityShootBowEvent $event): void
+    {
         $entity = $event->getEntity();
         if (($entity instanceof Player) && $this->inGame($entity) && $this->phase !== self::PHASE_GAME) {
             $event->cancel();
