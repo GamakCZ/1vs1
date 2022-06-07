@@ -530,7 +530,7 @@ class Arena implements Listener
 	{
 		$player = $event->getEntity();
         $to = $event->getTo();
-		if ($player instanceof Player) {
+		if (!$player instanceof Player) {
 			return;
 		}
 		if ($this->inGame($player) && $to->getWorld() !== $this->level) {
