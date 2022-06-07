@@ -510,21 +510,21 @@ class Arena implements Listener
 		}
 	}
 
-    public function onProjectileHitBlock(ProjectileHitBlockEvent $event): void
-    {
-        $projectile = $event->getEntity();
-        if ($projectile instanceof Arrow && $projectile->getWorld() === $this->level) {
-            $projectile->flagForDespawn();
-        }
-    }
+	public function onProjectileHitBlock(ProjectileHitBlockEvent $event): void
+	{
+		$projectile = $event->getEntity();
+		 ($projectile instanceof Arrow && $projectile->getWorld()->getId() === $this->level->getId()) {
+			$projectile->flagForDespawn();
+		}
+	}
 
-    public function onEntityUseBow(EntityShootBowEvent $event): void
-    {
-        $entity = $event->getEntity();
-        if (($entity instanceof Player) && $this->inGame($entity) && $this->phase !== self::PHASE_GAME) {
-            $event->cancel();
-        }
-    }
+	public function onEntityUseBow(EntityShootBowEvent $event): void
+	{
+		$entity = $event->getEntity();
+		if (($entity instanceof Player) && $this->inGame($entity) && $this->phase !== self::PHASE_GAME) {
+			$event->cancel();
+		}
+	}
 
 	public function onLevelChange(EntityTeleportEvent $event): void
 	{
