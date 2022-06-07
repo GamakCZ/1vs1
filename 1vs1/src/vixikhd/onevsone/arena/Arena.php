@@ -51,7 +51,6 @@ use vixikhd\onevsone\OneVsOne;
  */
 class Arena implements Listener
 {
-
     public const MSG_MESSAGE = 0;
     public const MSG_TIP = 1;
     public const MSG_POPUP = 2;
