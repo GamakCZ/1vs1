@@ -105,6 +105,7 @@ class ArenaScheduler extends Task
 
 						$player->getHungerManager()->setFood(20);
 						$player->setHealth(20);
+						$player->setImmobile(false):
 
 						$player->setGamemode($this->plugin->plugin->getServer()->getGamemode());
 					}
