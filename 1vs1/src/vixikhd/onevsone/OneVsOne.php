@@ -71,10 +71,10 @@ class OneVsOne extends PluginBase implements Listener
 		$this->getServer()->getCommandMap()->register("1vs1", $this->commands[] = new OneVsOneCommand($this));
 	}
 
-    /**
-     * @throws JsonException
-     */
-    public function onDisable(): void
+	/**
+	* @throws JsonException
+	*/
+	public function onDisable(): void
 	{
 		$this->dataProvider->saveArenas();
 	}
