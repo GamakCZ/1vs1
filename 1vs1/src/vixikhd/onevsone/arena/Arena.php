@@ -481,7 +481,7 @@ class Arena implements Listener
 		$player->getInventory()->clearAll();
 		$player->getArmorInventory()->clearAll();
 		$player->getCursorInventory()->clearAll();
-        $player->setImmobile(false);
+		$player->setImmobile(false);
 
 		$player->teleport($this->plugin->getServer()->getWorldManager()->getDefaultWorld()?->getSpawnLocation());
 
