@@ -531,11 +531,12 @@ class Arena implements Listener
 		$player = $event->getEntity();
         $to = $event->getTo();
 		if ($player instanceof Player) {
-		    if ($this->inGame($player) && $to->getWorld() !== $this->level) {
-			    $this->disconnectPlayer($player, "You are successfully leaved arena!");
-		    }
-        }
-    }
+			return;
+		}
+		if ($this->inGame($player) && $to->getWorld() !== $this->level) {
+			$this->disconnectPlayer($player, "You are successfully leaved arena!");
+		}
+	}
 
 	public function __destruct()
 	{
