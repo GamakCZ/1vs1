@@ -385,7 +385,7 @@ class Arena implements Listener
 		$player->setGamemode(GameMode::ADVENTURE());
 		$player->setHealth(20);
 		$player->getHungerManager()->setFood(20);
-        $player->setImmobile();
+		$player->setImmobile();
 
 		$inv = $player->getArmorInventory();
 		if (empty($this->plugin->dataProvider->config["kits"]) || !is_array($this->plugin->dataProvider->config["kits"])) {
