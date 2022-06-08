@@ -22,7 +22,10 @@ namespace vixikhd\onevsone\arena;
 
 use pocketmine\block\BlockLegacyIds;
 use pocketmine\block\tile\Tile;
+use pocketmine\entity\projectile\Arrow;
+use pocketmine\event\entity\EntityShootBowEvent;
 use pocketmine\event\entity\EntityTeleportEvent;
+use pocketmine\event\entity\ProjectileHitBlockEvent;
 use pocketmine\event\Listener;
 use pocketmine\event\player\PlayerDeathEvent;
 use pocketmine\event\player\PlayerExhaustEvent;
@@ -382,6 +385,7 @@ class Arena implements Listener
 		$player->setGamemode(GameMode::ADVENTURE());
 		$player->setHealth(20);
 		$player->getHungerManager()->setFood(20);
+		$player->setImmobile();
 
 		$inv = $player->getArmorInventory();
 		if (empty($this->plugin->dataProvider->config["kits"]) || !is_array($this->plugin->dataProvider->config["kits"])) {
@@ -477,6 +481,7 @@ class Arena implements Listener
 		$player->getInventory()->clearAll();
 		$player->getArmorInventory()->clearAll();
 		$player->getCursorInventory()->clearAll();
+		$player->setImmobile(false);
 
 		$player->teleport($this->plugin->getServer()->getWorldManager()->getDefaultWorld()?->getSpawnLocation());
 
@@ -505,13 +510,30 @@ class Arena implements Listener
 		}
 	}
 
+	public function onProjectileHitBlock(ProjectileHitBlockEvent $event): void
+	{
+		$projectile = $event->getEntity();
+		if ($projectile instanceof Arrow && $projectile->getWorld()->getId() === $this->level->getId()) {
+			$projectile->flagForDespawn();
+		}
+	}
+
+	public function onEntityUseBow(EntityShootBowEvent $event): void
+	{
+		$entity = $event->getEntity();
+		if (($entity instanceof Player) && $this->inGame($entity) && $this->phase !== self::PHASE_GAME) {
+			$event->cancel();
+		}
+	}
+
 	public function onLevelChange(EntityTeleportEvent $event): void
 	{
 		$player = $event->getEntity();
+		$to = $event->getTo();
 		if (!$player instanceof Player) {
 			return;
 		}
-		if ($this->inGame($player)) {
+		if ($this->inGame($player) && $to->getWorld() !== $this->level) {
 			$this->disconnectPlayer($player, "You are successfully leaved arena!");
 		}
 	}

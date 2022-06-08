@@ -20,7 +20,7 @@ declare(strict_types=1);
 
 namespace vixikhd\onevsone\arena;
 
-use pocketmine\block\tile\Sign;
+use pocketmine\block\BaseSign;
 use pocketmine\block\utils\SignText;
 use pocketmine\scheduler\Task;
 use pocketmine\world\Position;
@@ -44,8 +44,6 @@ class ArenaScheduler extends Task
 	public int|float $gameTime = 20 * 60;
 	/** @var int $restartTime */
 	public int $restartTime = 10;
-	/** @var array $restartData */
-	public array $restartData = [];
 	/** @var Arena $plugin */
 	protected Arena $plugin;
 
@@ -75,6 +73,7 @@ class ArenaScheduler extends Task
 					if ($this->startTime === 0) {
 						$this->plugin->startGame();
 						foreach ($this->plugin->players as $player) {
+                            				$player->setImmobile(false);
 							$this->plugin->level->addSound($player->getLocation(), new AnvilUseSound());
 						}
 					} else {
@@ -106,6 +105,7 @@ class ArenaScheduler extends Task
 
 						$player->getHungerManager()->setFood(20);
 						$player->setHealth(20);
+						$player->setImmobile(false);
 
 						$player->setGamemode($this->plugin->plugin->getServer()->getGamemode());
 					}
@@ -135,7 +135,7 @@ class ArenaScheduler extends Task
 		}
 
 		if ($this->plugin->setup) {
-			/** @var Sign $sign */
+			/** @var BaseSign $sign */
 			$sign = $signPos->getWorld()->getTile($signPos);
 			$sign->setText(new SignText([$signText[0], $signText[1], $signText[2], $signText[3]]));
 			return;
@@ -163,7 +163,7 @@ class ArenaScheduler extends Task
 				break;
 		}
 
-		/** @var Sign $sign */
+		/** @var BaseSign $sign */
 		$sign = $signPos->getWorld()->getTile($signPos);
 		$sign->setText(new SignText([$signText[0], $signText[1], $signText[2], $signText[3]]));
 	}

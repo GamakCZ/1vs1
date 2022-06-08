@@ -92,6 +92,6 @@ class EmptyArenaChooser
 			return null;
 		}
 
-		return $this->plugin->arenas[$availableArenas[array_rand($availableArenas, 1)]];
+		return $this->plugin->arenas[$availableArenas[array_rand($availableArenas)]];
 	}
 }
