@@ -529,11 +529,10 @@ class Arena implements Listener
 	public function onLevelChange(EntityTeleportEvent $event): void
 	{
 		$player = $event->getEntity();
-		$to = $event->getTo();
 		if (!$player instanceof Player) {
 			return;
 		}
-		if ($this->inGame($player) && $to->getWorld()->getId() !== $this->level->getId()) {
+		if ($this->inGame($player) && $player->getWorld()->getId() !== $this->level->getId()) {
 			$this->disconnectPlayer($player, "You are successfully leaved arena!");
 		}
 	}
