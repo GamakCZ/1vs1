@@ -21,6 +21,7 @@ declare(strict_types=1);
 namespace vixikhd\onevsone\provider;
 
 use pocketmine\utils\Config;
+use JsonException;
 use RuntimeException;
 use vixikhd\onevsone\arena\Arena;
 use vixikhd\onevsone\OneVsOne;
@@ -81,7 +82,7 @@ class YamlDataProvider
 	}
 
 	/**
-	 * @throws \JsonException
+	 * @throws JsonException
 	 */
 	public function saveArenas(): void
 	{
