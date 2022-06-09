@@ -269,6 +269,9 @@ class Arena implements Listener
 		$player = $event->getPlayer();
 
 		if ($this->inGame($player)) {
+                    if ($player->getWorld()->getId() !== $this->level->getId()) {
+                        $this->disconnectPlayer($player, "You are successfully leaved arena!");
+                    } else {
 			$index = null;
 			foreach ($this->players as $i => $p) {
 				if ($p->getId() === $player->getId()) {
