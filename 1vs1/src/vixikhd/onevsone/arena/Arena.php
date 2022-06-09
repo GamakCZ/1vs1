@@ -248,7 +248,7 @@ class Arena implements Listener
 			$this->phase = self::PHASE_RESTART;
 			return;
 		}
-
+                $player->setImmobile(false);
 		$player->sendTitle("§aYOU WON!");
 		$event = new PlayerArenaWinEvent($this->plugin, $player, $this);
 		$event->call();
@@ -533,7 +533,7 @@ class Arena implements Listener
 		if (!$player instanceof Player) {
 			return;
 		}
-		if ($this->inGame($player) && $to->getWorld() !== $this->level) {
+		if ($this->inGame($player) && $to->getWorld()->getId() !== $this->level->getId()) {
 			$this->disconnectPlayer($player, "You are successfully leaved arena!");
 		}
 	}
