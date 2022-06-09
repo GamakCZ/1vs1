@@ -533,7 +533,7 @@ class Arena implements Listener
 		if (!$player instanceof Player) {
 			return;
 		}
-		if ($this->inGame($player) && $to->getWorld() !== $this->level) {
+		if ($this->inGame($player) && $to->getWorld()->getId() !== $this->level->getId()) {
 			$this->disconnectPlayer($player, "You are successfully leaved arena!");
 		}
 	}
