@@ -73,7 +73,7 @@ class ArenaScheduler extends Task
 					if ($this->startTime === 0) {
 						$this->plugin->startGame();
 						foreach ($this->plugin->players as $player) {
-                            				$player->setImmobile(false);
+                            $player->setImmobile(false);
 							$this->plugin->level->addSound($player->getLocation(), new AnvilUseSound());
 						}
 					} else {
@@ -92,7 +92,7 @@ class ArenaScheduler extends Task
 				$this->gameTime--;
 				break;
 			case Arena::PHASE_RESTART:
-				$this->plugin->broadcastMessage("§a> Restarting in {$this->restartTime} sec.", Arena::MSG_TIP);
+				$this->plugin->broadcastMessage("§a> Restarting in $this->restartTime sec.", Arena::MSG_TIP);
 				$this->restartTime--;
 
 				if ($this->restartTime === 0) {
