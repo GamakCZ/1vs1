@@ -243,7 +243,7 @@ class Arena implements Listener
 			$this->phase = self::PHASE_RESTART;
 			return;
 		}
-        $player->setImmobile(false);
+        	$player->setImmobile(false);
 		$player->sendTitle("§aYOU WON!");
 		$event = new PlayerArenaWinEvent($this->plugin, $player, $this);
 		$event->call();
@@ -479,15 +479,15 @@ class Arena implements Listener
 		}
 	}
 
-    public function onEntityDamageByEntityEvent(EntityDamageByEntityEvent $event): void
-    {
-        $entity = $event->getEntity();
-        $damager = $event->getDamager();
-        if ($entity instanceof Player && $damager instanceof Player && $this->inGame($entity) && $this->inGame($damager) && $event->getFinalDamage() >= $entity->getHealth()) {
-            $event->cancel();
-            $this->disconnectPlayer($entity, "", true);
-        }
-    }
+    	public function onEntityDamageByEntityEvent(EntityDamageByEntityEvent $event): void
+    	{
+        	$entity = $event->getEntity();
+        	$damager = $event->getDamager();
+        	if ($entity instanceof Player && $damager instanceof Player && $this->inGame($entity) && $this->inGame($damager) && $event->getFinalDamage() >= $entity->getHealth()) {
+            		$event->cancel();
+            		$this->disconnectPlayer($entity, "", true);
+        	}
+    	}
 
 	public function onProjectileHitBlockEvent(ProjectileHitBlockEvent $event): void
 	{
