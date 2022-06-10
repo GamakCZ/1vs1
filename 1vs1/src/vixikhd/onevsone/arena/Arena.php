@@ -465,7 +465,9 @@ class Arena implements Listener
 
 		if (!$death) {
 			$this->broadcastMessage("§a> Player {$player->getName()} left the match. §7[" . count($this->players) . "/{$this->data["slots"]}]");
-		}
+		} else {
+            $this->broadcastMessage("§a> Player {$player->getName()} died. §7[" . count($this->players) . "/{$this->data["slots"]}]");
+        }
 
 		if ($quitMsg !== "") {
 			$player->sendMessage("§a> $quitMsg");
