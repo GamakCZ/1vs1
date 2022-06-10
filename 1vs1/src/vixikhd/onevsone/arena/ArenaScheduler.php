@@ -129,6 +129,7 @@ class ArenaScheduler extends Task
 		}
 
 		$signText = ["§2§l1vs1", "§9[ §b? / ? §9]", "§6Setup", "§6Wait few sec..."];
+		
 		if ($signPos->getWorld()->getTile($signPos) === null) {
 			return;
 		}
