@@ -136,6 +136,7 @@ class ArenaScheduler extends Task
 
 		if ($this->plugin->setup) {
 			/** @var BaseSign $sign */
+			// TODO: WTF WHY SIGN TEXT ISNT UPDATE
 			$sign = $signPos->getWorld()->getTile($signPos);
 			$sign->setText(new SignText([$signText[0], $signText[1], $signText[2], $signText[3]]));
 			return;
@@ -164,6 +165,7 @@ class ArenaScheduler extends Task
 		}
 
 		/** @var BaseSign $sign */
+		// TODO: WTF WHY SIGN TEXT ISNT UPDAT
 		$sign = $signPos->getWorld()->getTile($signPos);
 		$sign->setText(new SignText([$signText[0], $signText[1], $signText[2], $signText[3]]));
 	}
