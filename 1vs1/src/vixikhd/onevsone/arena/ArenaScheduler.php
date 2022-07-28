@@ -22,6 +22,7 @@ namespace vixikhd\onevsone\arena;
 
 use pocketmine\block\BaseSign;
 use pocketmine\block\utils\SignText;
+use pocketmine\entity\Location;
 use pocketmine\scheduler\Task;
 use pocketmine\world\Position;
 use pocketmine\world\sound\AnvilUseSound;
@@ -135,10 +136,12 @@ class ArenaScheduler extends Task
 		}
 
 		if ($this->plugin->setup) {
-			/** @var BaseSign $sign */
-			// TODO: WTF WHY SIGN TEXT ISNT UPDATE
-			$sign = $signPos->getWorld()->getTile($signPos);
-			$sign->setText(new SignText([$signText[0], $signText[1], $signText[2], $signText[3]]));
+			$sign = $signPos->getWorld()->getBlock($signPos);
+            if ($sign instanceof BaseSign) {
+                $sign->setText(new SignText([$signText[0], $signText[1], $signText[2], $signText[3]]));
+                $pos = new Vector3($signPos->getX(), $signPos->getY(), $signPos->getZ());
+                $sign->getPosition()->getWorld()->setBlock($pos, $sign);
+            }
 			return;
 		}
 
@@ -163,11 +166,12 @@ class ArenaScheduler extends Task
 				$signText[3] = "§8Map: §7{$this->plugin->level->getFolderName()}";
 				break;
 		}
-
-		/** @var BaseSign $sign */
-		// TODO: WTF WHY SIGN TEXT ISNT UPDATE
-		$sign = $signPos->getWorld()->getTile($signPos);
-		$sign->setText(new SignText([$signText[0], $signText[1], $signText[2], $signText[3]]));
+        $sign = $signPos->getWorld()->getBlock($signPos);
+        if ($sign instanceof BaseSign) {
+            $sign->setText(new SignText([$signText[0], $signText[1], $signText[2], $signText[3]]));
+            $pos = new Vector3($signPos->getX(), $signPos->getY(), $signPos->getZ(), $signPos->getWorld());
+            $sign->getPosition()->getWorld()->setBlock($pos, $sign);
+        }
 	}
 
 	public function reloadTimer(): void
