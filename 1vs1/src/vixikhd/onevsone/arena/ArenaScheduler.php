@@ -137,11 +137,11 @@ class ArenaScheduler extends Task
 
 		if ($this->plugin->setup) {
 			$sign = $signPos->getWorld()->getBlock($signPos);
-            if ($sign instanceof BaseSign) {
-                $sign->setText(new SignText([$signText[0], $signText[1], $signText[2], $signText[3]]));
-                $pos = new Vector3($signPos->getX(), $signPos->getY(), $signPos->getZ());
-                $sign->getPosition()->getWorld()->setBlock($pos, $sign);
-            }
+            		if ($sign instanceof BaseSign) {
+                		$sign->setText(new SignText([$signText[0], $signText[1], $signText[2], $signText[3]]));
+                		$pos = new Vector3($signPos->getX(), $signPos->getY(), $signPos->getZ());
+                		$sign->getPosition()->getWorld()->setBlock($pos, $sign);
+            		}
 			return;
 		}
 
@@ -166,12 +166,12 @@ class ArenaScheduler extends Task
 				$signText[3] = "§8Map: §7{$this->plugin->level->getFolderName()}";
 				break;
 		}
-        $sign = $signPos->getWorld()->getBlock($signPos);
-        if ($sign instanceof BaseSign) {
-            $sign->setText(new SignText([$signText[0], $signText[1], $signText[2], $signText[3]]));
-            $pos = new Vector3($signPos->getX(), $signPos->getY(), $signPos->getZ(), $signPos->getWorld());
-            $sign->getPosition()->getWorld()->setBlock($pos, $sign);
-        }
+        	$sign = $signPos->getWorld()->getBlock($signPos);
+        	if ($sign instanceof BaseSign) {
+            		$sign->setText(new SignText([$signText[0], $signText[1], $signText[2], $signText[3]]));
+            		$pos = new Vector3($signPos->getX(), $signPos->getY(), $signPos->getZ(), $signPos->getWorld());
+            		$sign->getPosition()->getWorld()->setBlock($pos, $sign);
+        	}
 	}
 
 	public function reloadTimer(): void
