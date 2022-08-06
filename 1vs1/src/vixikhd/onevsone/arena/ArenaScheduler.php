@@ -22,6 +22,7 @@ namespace vixikhd\onevsone\arena;
 
 use pocketmine\block\BaseSign;
 use pocketmine\block\utils\SignText;
+use pocketmine\entity\Location;
 use pocketmine\scheduler\Task;
 use pocketmine\world\Position;
 use pocketmine\world\sound\AnvilUseSound;
@@ -92,7 +93,7 @@ class ArenaScheduler extends Task
 				$this->gameTime--;
 				break;
 			case Arena::PHASE_RESTART:
-				$this->plugin->broadcastMessage("§a> Restarting in {$this->restartTime} sec.", Arena::MSG_TIP);
+				$this->plugin->broadcastMessage("§a> Restarting in $this->restartTime sec.", Arena::MSG_TIP);
 				$this->restartTime--;
 
 				if ($this->restartTime === 0) {
@@ -129,15 +130,18 @@ class ArenaScheduler extends Task
 		}
 
 		$signText = ["§2§l1vs1", "§9[ §b? / ? §9]", "§6Setup", "§6Wait few sec..."];
-
+		
 		if ($signPos->getWorld()->getTile($signPos) === null) {
 			return;
 		}
 
 		if ($this->plugin->setup) {
-			/** @var BaseSign $sign */
-			$sign = $signPos->getWorld()->getTile($signPos);
-			$sign->setText(new SignText([$signText[0], $signText[1], $signText[2], $signText[3]]));
+			$sign = $signPos->getWorld()->getBlock($signPos);
+            		if ($sign instanceof BaseSign) {
+                		$sign->setText(new SignText([$signText[0], $signText[1], $signText[2], $signText[3]]));
+                		$pos = new Vector3($signPos->getX(), $signPos->getY(), $signPos->getZ());
+                		$sign->getPosition()->getWorld()->setBlock($pos, $sign);
+            		}
 			return;
 		}
 
@@ -162,10 +166,12 @@ class ArenaScheduler extends Task
 				$signText[3] = "§8Map: §7{$this->plugin->level->getFolderName()}";
 				break;
 		}
-
-		/** @var BaseSign $sign */
-		$sign = $signPos->getWorld()->getTile($signPos);
-		$sign->setText(new SignText([$signText[0], $signText[1], $signText[2], $signText[3]]));
+        	$sign = $signPos->getWorld()->getBlock($signPos);
+        	if ($sign instanceof BaseSign) {
+            		$sign->setText(new SignText([$signText[0], $signText[1], $signText[2], $signText[3]]));
+            		$pos = new Vector3($signPos->getX(), $signPos->getY(), $signPos->getZ(), $signPos->getWorld());
+            		$sign->getPosition()->getWorld()->setBlock($pos, $sign);
+        	}
 	}
 
 	public function reloadTimer(): void

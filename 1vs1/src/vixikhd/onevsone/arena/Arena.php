@@ -23,16 +23,15 @@ namespace vixikhd\onevsone\arena;
 use pocketmine\block\BlockLegacyIds;
 use pocketmine\block\tile\Tile;
 use pocketmine\entity\projectile\Arrow;
+use pocketmine\event\entity\EntityDamageByEntityEvent;
 use pocketmine\event\entity\EntityShootBowEvent;
 use pocketmine\event\entity\EntityTeleportEvent;
 use pocketmine\event\entity\ProjectileHitBlockEvent;
 use pocketmine\event\Listener;
-use pocketmine\event\player\PlayerDeathEvent;
 use pocketmine\event\player\PlayerExhaustEvent;
 use pocketmine\event\player\PlayerInteractEvent;
 use pocketmine\event\player\PlayerMoveEvent;
 use pocketmine\event\player\PlayerQuitEvent;
-use pocketmine\event\player\PlayerRespawnEvent;
 use pocketmine\item\ItemFactory;
 use pocketmine\item\VanillaItems;
 use pocketmine\player\GameMode;
@@ -65,7 +64,7 @@ class Arena implements Listener
 	public OneVsOne $plugin;
 
 	/** @var ArenaScheduler $scheduler */
-	public ArenaScheduler $scheduler;
+	private ArenaScheduler $scheduler;
 
 	/** @var int $phase */
 	public int $phase = 0;
@@ -78,9 +77,6 @@ class Arena implements Listener
 
 	/** @var Player[] $players */
 	public array $players = [];
-
-	/** @var Player[] $toRespawn */
-	public array $toRespawn = [];
 
 	/** @var World|null $level */
 	public ?World $level = null;
@@ -192,7 +188,7 @@ class Arena implements Listener
 		}
 
 		$keys = array_keys($this->plugin->dataProvider->config["kits"]);
-		$this->kit = $keys[array_rand($keys, 1)];
+		$this->kit = $keys[array_rand($keys)];
 
 		$this->phase = static::PHASE_LOBBY;
 		$this->players = [];
@@ -209,7 +205,6 @@ class Arena implements Listener
 		foreach ($this->players as $player) {
 			$players[$player->getName()] = $player;
 		}
-
 
 		$this->players = $players;
 		$this->phase = 1;
@@ -248,7 +243,7 @@ class Arena implements Listener
 			$this->phase = self::PHASE_RESTART;
 			return;
 		}
-
+        	$player->setImmobile(false);
 		$player->sendTitle("§aYOU WON!");
 		$event = new PlayerArenaWinEvent($this->plugin, $player, $this);
 		$event->call();
@@ -276,7 +271,7 @@ class Arena implements Listener
 				}
 			}
 
-			if ($event->getPlayer()->getLocation()->asVector3()->distance(Vector3::fromString($this->data["spawns"][$index])) > 1) {
+			if ($event->getPlayer()->getLocation()->asVector3()->distance(Vector3::fromString($this->data["spawns"][$index])) > 0.5) {
 				$player->teleport(Vector3::fromString($this->data["spawns"][$index]));
 			}
 		}
@@ -367,7 +362,7 @@ class Arena implements Listener
 
 		$selected = false;
 		for ($lS = 1; $lS <= $this->data["slots"]; $lS++) {
-			if ($selected || isset($this->players[$index = "spawn-{$lS}"])) {
+			if ($selected || isset($this->players[$index = "spawn-$lS"])) {
 				continue;
 			}
 
@@ -437,23 +432,6 @@ class Arena implements Listener
 		return ItemFactory::getInstance();
 	}
 
-	public function onDeath(PlayerDeathEvent $event): void
-	{
-		$player = $event->getPlayer();
-
-		if (!$this->inGame($player)) {
-			return;
-		}
-
-		foreach ($event->getDrops() as $item) {
-			$player->getWorld()->dropItem($player->getLocation(), $item);
-		}
-		$this->toRespawn[$player->getName()] = $player;
-		$this->disconnectPlayer($player, "", true);
-		$this->broadcastMessage("§a> {$this->plugin->getServer()->getLanguage()->translate($event->getDeathMessage())} §7[" . count($this->players) . "/{$this->data["slots"]}]");
-		$event->setDeathMessage("");
-		$event->setDrops([]);
-	}
 
 	public function disconnectPlayer(Player $player, string $quitMsg = "", bool $death = false): void
 	{
@@ -483,23 +461,16 @@ class Arena implements Listener
 		$player->getCursorInventory()->clearAll();
 		$player->setImmobile(false);
 
-		$player->teleport($this->plugin->getServer()->getWorldManager()->getDefaultWorld()?->getSpawnLocation());
+		$player->teleport($this->plugin->getServer()->getWorldManager()->getDefaultWorld()?->getSafeSpawn());
 
 		if (!$death) {
 			$this->broadcastMessage("§a> Player {$player->getName()} left the match. §7[" . count($this->players) . "/{$this->data["slots"]}]");
-		}
+		} else {
+            		$this->broadcastMessage("§a> Player {$player->getName()} died. §7[" . count($this->players) . "/{$this->data["slots"]}]");
+       	 	}
 
 		if ($quitMsg !== "") {
 			$player->sendMessage("§a> $quitMsg");
-		}
-	}
-
-	public function onRespawn(PlayerRespawnEvent $event): void
-	{
-		$player = $event->getPlayer();
-		if (isset($this->toRespawn[$player->getName()])) {
-			$event->setRespawnPosition($this->plugin->getServer()->getWorldManager()->getDefaultWorld()?->getSpawnLocation());
-			unset($this->toRespawn[$player->getName()]);
 		}
 	}
 
@@ -510,7 +481,17 @@ class Arena implements Listener
 		}
 	}
 
-	public function onProjectileHitBlock(ProjectileHitBlockEvent $event): void
+    	public function onEntityDamageByEntityEvent(EntityDamageByEntityEvent $event): void
+    	{
+        	$entity = $event->getEntity();
+        	$damager = $event->getDamager();
+        	if ($entity instanceof Player && $damager instanceof Player && $this->inGame($entity) && $this->inGame($damager) && $event->getFinalDamage() >= $entity->getHealth()) {
+            		$event->cancel();
+            		$this->disconnectPlayer($entity, "", true);
+        	}
+    	}
+
+	public function onProjectileHitBlockEvent(ProjectileHitBlockEvent $event): void
 	{
 		$projectile = $event->getEntity();
 		if ($projectile instanceof Arrow && $projectile->getWorld()->getId() === $this->level->getId()) {
@@ -518,7 +499,7 @@ class Arena implements Listener
 		}
 	}
 
-	public function onEntityUseBow(EntityShootBowEvent $event): void
+	public function onEntityShootBowEvent(EntityShootBowEvent $event): void
 	{
 		$entity = $event->getEntity();
 		if (($entity instanceof Player) && $this->inGame($entity) && $this->phase !== self::PHASE_GAME) {
@@ -526,14 +507,13 @@ class Arena implements Listener
 		}
 	}
 
-	public function onLevelChange(EntityTeleportEvent $event): void
+	public function onEntityTeleportEvent(EntityTeleportEvent $event): void
 	{
 		$player = $event->getEntity();
-		$to = $event->getTo();
 		if (!$player instanceof Player) {
 			return;
 		}
-		if ($this->inGame($player) && $to->getWorld() !== $this->level) {
+		if ($this->inGame($player) && $player->getWorld()->getId() !== $this->level->getId()) {
 			$this->disconnectPlayer($player, "You are successfully leaved arena!");
 		}
 	}
